@@ -1,0 +1,31 @@
+id: process/001
+slug: tasks-rework
+title: "Переработка процесса задач: структура, стадии, CLI"
+track: full
+legacyId: process-001
+queue:
+  after:
+    - infra/006
+  rationale: "Переработка процесса: инструмент task, треки full/lite, миграция каталога, растворение ролей; выполнена 2026-08-16"
+gates:
+  brief:
+    status: согласовано
+    approvedAt: 2026-08-16
+    sha256: 64fce432ff5df0d224ce92d9d30c264d9f8dbe3ccfa5d181fdff678f1d331213
+  adr:
+    status: согласовано
+    approvedAt: 2026-08-16
+    sha256: 6b5943af31ddc40d71df5aeb27636e06abe3ef5c5cffc37d7033705102fde3dd
+  plan:
+    status: согласовано
+    approvedAt: 2026-08-16
+    sha256: 305695288f7602566b40a51d176522f58b00046ad7850b5307844c98e548dcec
+  result:
+    status: согласовано
+    approvedAt: 2026-08-16
+    sha256: 1f1aa06530394681b50b86a59685bb7b1d13ffdc1aca0bc18ba9a1d85ed44aa9
+workspace:
+  mr: https://github.com/dimitro-dev/ai-for-developers-project-386/pull/9
+meta:
+  rev: 9
+  selfHash: 151ed285271f54a900a6ccd4183ddd0c4979048c1f3a4dd14349d293f2db3c2b

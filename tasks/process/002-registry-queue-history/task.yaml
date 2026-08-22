@@ -1,0 +1,16 @@
+id: process/002
+slug: registry-queue-history
+title: "REGISTRY: очередь без завершённых, история отдельно"
+track: lite
+gates:
+  setup:
+    status: согласовано
+    approvedAt: 2026-08-16
+    sha256: b5f0d19f74d77b114ec1fad40e0ce390a806adee6f661e346aa30017f3e89b34
+  result:
+    status: согласовано
+    approvedAt: 2026-08-16
+    sha256: 9f1e39b895d6cdd108e968cf9d54c15c85d17eb413c64e459930a7a1c02793ac
+meta:
+  rev: 3
+  selfHash: 591ab9edc238382a25d6610e8764d49763069cbf5c27c44b7a08a4c504be3b7b

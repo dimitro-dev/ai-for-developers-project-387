@@ -1,0 +1,22 @@
+id: back/003
+slug: slot-engine-package
+title: Вынесение Slot Engine в packages/slot-engine
+track: full
+depends:
+  - back/001
+queue:
+  after:
+    - back/002
+  rationale: Вынесение Slot Engine в packages/slot-engine с полным набором доменных тестов
+gates:
+  brief:
+    status: черновик
+  adr:
+    status: черновик
+  plan:
+    status: черновик
+  result:
+    status: черновик
+meta:
+  rev: 1
+  selfHash: 1495995f4de4854e4fd9f2ab4bcc3de23564d740654e126c6118e40a0f3cf1cc

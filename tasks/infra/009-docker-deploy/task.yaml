@@ -1,0 +1,28 @@
+id: infra/009
+slug: docker-deploy
+title: "Публикация приложения: Docker-образ и деплой"
+track: full
+queue:
+  rationale: "Внешнее требование учебной платформы: Dockerfile, старт по PORT, публичная ссылка. Раньше back/002 — решение владельца 2026-08-18: с базой задача про образ растёт, а переезд на неё потом образ не переписывает"
+gates:
+  brief:
+    status: согласовано
+    approvedAt: 2026-08-18
+    sha256: d22548947d749ae535199a8b7041aa4a5c3497c04f5155c0affcc4cfbb13da39
+  adr:
+    status: согласовано
+    approvedAt: 2026-08-18
+    sha256: fde8103af06892e7b2258a19c5c102ffc4654b3ff027b27f943f37080e77063c
+  plan:
+    status: согласовано
+    approvedAt: 2026-08-18
+    sha256: 3298646b8eb5b2946f9f1e6177715218de77f862218cf14e9f629f348e83686b
+  result:
+    status: согласовано
+    approvedAt: 2026-08-19
+    sha256: b62bee2318d396a28ebfcd48bd5c218f6a94c657bb60dcc0355a601f4b5c2252
+workspace:
+  mr: https://github.com/dimitro-dev/ai-for-developers-project-386/pull/15
+meta:
+  rev: 10
+  selfHash: 720558272b621a8e85bce97b48038668f50cb3a0ced4e56f2f5b25e0893bfabf

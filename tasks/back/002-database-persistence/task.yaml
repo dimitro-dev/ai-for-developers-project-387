@@ -1,0 +1,32 @@
+id: back/002
+slug: database-persistence
+title: "Персистентность: схема БД, миграции и exclusion constraint"
+track: full
+depends:
+  - infra/001
+queue:
+  after:
+    - infra/001
+  rationale: Схема БД, миграции и exclusion constraint — последняя линия защиты от пересечения Booking, недостижимая на in-memory
+gates:
+  brief:
+    status: согласовано
+    approvedAt: 2026-08-19
+    sha256: 61212dc2acf2e068f8961b88d0f12f2b4280fdb5c9abc818a30e28ba2d732f76
+  adr:
+    status: согласовано
+    approvedAt: 2026-08-19
+    sha256: a5d7c6a9122e85121cf3ad8f096115179ecc27a4b3acfd6572974b15ef7a6491
+  plan:
+    status: согласовано
+    approvedAt: 2026-08-19
+    sha256: eef9c7e56de3d9f50de6f8a7690d57421281a19b882e08e9054c83dcedc1d960
+  result:
+    status: согласовано
+    approvedAt: 2026-08-20
+    sha256: 6e54d2b0f982a1b28b90e47b61838800a17bb1d5a20568e98a283652e9f8d370
+workspace:
+  mr: https://github.com/dimitro-dev/ai-for-developers-project-386/pull/16
+meta:
+  rev: 8
+  selfHash: 702c3c60ad4516294432ece3958014f3d4e52bf7077bc8e5108386bfbb235002

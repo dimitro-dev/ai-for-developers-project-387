@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Единственная точка связи UI-действие → HTTP-операция (решение AUDIT.md 8.1).
+
+  Правила:
+  - значение operation — точный operationId из packages/contracts/generated/openapi.yaml;
+  - inline operation= в *.screen.md запрещён: действие резолвится только через этот файл;
+  - api-action id глобально уникальны между экранами (атрибут screen фиксирует владельца);
+  - если операции в контракте нет, вместо operation указывается gap="GAP-XXX" из contract-gaps.xml.
+-->
+<ApiBindings version="0.1">
+  <!-- owner: onboarding -->
+  <Binding action="checkSetup" operation="getAdminSetup" screen="owner.setup-check" />
+  <Binding action="completeSetup" operation="completeAdminSetup" screen="owner.onboarding-working-hours" />
+
+  <!-- owner: предстоящие встречи (view-model собирается из двух операций) -->
+  <Binding action="loadUpcomingMeetings" operation="getAdminUpcomingBookings" screen="owner.upcoming-meetings" />
+  <Binding action="refreshUpcomingMeetings" operation="getAdminUpcomingBookings" screen="owner.upcoming-meetings" />
+  <Binding action="loadMeetingsSettings" operation="getAdminSettings" screen="owner.upcoming-meetings" />
+
+  <!-- owner: типы событий -->
+  <Binding action="loadEventTypes" operation="getAdminEventTypes" screen="owner.event-types" />
+  <Binding action="submitEventType" operation="createAdminEventType" screen="owner.create-event-type" />
+
+  <!-- owner: настройки (все три чтения — одна операция, id различаются по экрану) -->
+  <Binding action="loadSettingsSummary" operation="getAdminSettings" screen="owner.settings" />
+  <Binding action="loadWorkingHoursSettings" operation="getAdminSettings" screen="owner.working-hours-settings" />
+  <Binding action="saveOwnerSettings" operation="updateAdminSettings" screen="owner.working-hours-settings" />
+  <Binding action="loadProfileSettings" operation="getAdminSettings" screen="owner.profile-settings" />
+  <Binding action="saveProfileSettings" operation="updateAdminSettings" screen="owner.profile-settings" />
+
+  <!-- guest -->
+  <Binding action="loadPublicCalendar" operation="getPublicCalendar" screen="guest.event-types" />
+  <Binding action="loadPublicEventTypes" operation="getPublicEventTypes" screen="guest.event-types" />
+  <Binding action="loadPublicSlots" operation="getPublicSlots" screen="guest.slots" />
+  <Binding action="refreshPublicSlots" operation="getPublicSlots" screen="guest.slots" />
+  <Binding action="createBooking" operation="createPublicBooking" screen="guest.booking-form" />
+</ApiBindings>

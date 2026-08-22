@@ -1,0 +1,38 @@
+id: front/guest/002
+slug: guest-screens
+title: "Гостевой сценарий: четыре экрана и сквозная проверка"
+track: full
+legacyId: front-guest-002
+depends:
+  - front/ui/002
+  - front/guest/001
+  - infra/004
+  - back/001
+  - infra/003
+queue:
+  after:
+    - front/guest/001
+  parallel:
+    - front/owner/001
+    - infra/001
+  rationale: "Вертикальная задача: четыре гостевых экрана и сквозная проверка против реального API"
+gates:
+  brief:
+    status: согласовано
+    approvedAt: 2026-08-13
+    sha256: 85c98d4c48e3125dd810a0316a04fee060ca53191a7d1afac00c4ed4a5eec2aa
+  adr:
+    status: согласовано
+    approvedAt: 2026-08-15
+    sha256: 0b8e0765cbcc5edd6315125b37480151c1be9be1ab9d08fe31394aed41554534
+  plan:
+    status: согласовано
+    approvedAt: 2026-08-15
+    sha256: 913f2ea7f6a7d6853ce6f7a9aff9ca54ea9f2a503a1fd22b907816fb855eac92
+  result:
+    status: согласовано
+    approvedAt: 2026-08-15
+    sha256: 3105c3f9ec486ed189c54fb46d6ced71818122c812eff55cf0e0f63f38a80c22
+meta:
+  rev: 1
+  selfHash: a0670bb5930a7fa4d3e29ca8b20010b0d0f2835cb617a49784fae0c3bd1fcb6c

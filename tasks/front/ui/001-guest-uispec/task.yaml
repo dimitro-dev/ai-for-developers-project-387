@@ -1,0 +1,21 @@
+id: front/ui/001
+slug: guest-uispec
+title: "Гостевой UISpec: экраны публичного сценария гостя"
+track: full
+legacyId: front-ui-001
+gates:
+  brief:
+    status: согласовано
+    sha256: 24b12641d4ba82338c7820db73090dd0c34a555c7c9e45247ca56962e819416f
+  adr:
+    status: согласовано
+    sha256: 4b6f12c6e0ff310ce5432054e641ac67fa3d80e32f8d775e725dfbc7515a3d53
+  plan:
+    status: согласовано
+    sha256: 921c002137f2ac2b8840312e790611088573903c011dd76bffb7df589d48e0d7
+  result:
+    status: согласовано
+    sha256: 9c7aaca6995687935e34aaf842f3761dfda46760fa4be794476b68470c62fd6f
+meta:
+  rev: 1
+  selfHash: d7d8f6e5997ff9d3dc0f0d40415d6b26032a46725907ec13e26a775b5c433aec

@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<DesignTokens version="0.1">
+  <Color id="color.background.primary" light="#FFFFFF" dark="#111318" />
+  <Color id="color.background.secondary" light="#F5F7FB" dark="#1A1E26" />
+  <Color id="color.background.scrim" light="#00000066" dark="#00000099" />
+  <Color id="color.surface.primary" light="#FFFFFF" dark="#191D24" />
+  <Color id="color.surface.selected" light="#EAF1FF" dark="#20345F" />
+  <Color id="color.text.primary" light="#131722" dark="#F7F8FA" />
+  <Color id="color.text.secondary" light="#687083" dark="#AEB5C3" />
+  <Color id="color.text.onPrimary" light="#FFFFFF" dark="#FFFFFF" />
+  <!--
+    color.action.primary, dark: было #4D86FF, контраст к $color.text.onPrimary (#FFFFFF) 3.40 — ниже
+    WCAG AA 4.5:1 для текста 14sp, а подпись Button variant="primary" и выбранные чипы WeekdaySelector /
+    DurationSelector лежат прямо на этой заливке. Стало #246BFD — то же значение, что в light-теме:
+    осветлять accent в тёмной теме нельзя, пока он несёт роль подложки под белой подписью.
+    Пересчёт (WCAG 2.1 relative luminance), dark-тема, новое / было:
+      к $color.text.onPrimary #FFFFFF          4.57 / 3.40
+      как цвет иконки на background.primary    4.07 / 5.46
+      как цвет иконки на surface.primary       3.70 / 4.97
+      как цвет иконки на background.secondary  3.65 / 4.91
+      как цвет иконки на surface.selected      2.68 / 3.59
+    Обе роли одним значением не закрываются: при контрасте 4.5 к белому светимость токена ≤ 0.183, что даёт
+    ≤ 4.13 к background.primary — для текста 14sp поверх тёмного фона понадобился бы отдельный токен, как
+    color.guest.selectedSurface ниже. Фактических употреблений action.primary как цвета текста в спеках нет:
+    только как цвет иконки (порог WCAG 1.4.11 — 3:1) и как заливка под подписью. Глиф на плитке
+    surface.selected декоративен — строка сообщает то же словами (правило component.settings-row), поэтому
+    2.68 в этой паре допустимо. Light-тема не менялась: 4.57 к белой подписи, 4.03…4.57 как цвет иконки.
+
+    color.action.primaryPressed, dark: было #6A99FF, к белой подписи 2.76 — дефект той же природы, подпись
+    нажатой кнопки лежит на этой заливке. Стало #1554D6, снова равное light-значению:
+      к $color.text.onPrimary #FFFFFF          6.42 / 2.76
+      к base #246BFD (заметность нажатия)      1.41 — тот же шаг, что между base и pressed в light-теме
+      заливка к background.primary #111318     2.89 / 6.74
+    Осветлённый pressed в тёмной теме не работает: значения того же оттенка, которые дают 4.5 к белому
+    (#266BFF и светлее), отличаются от base на 1.01–1.05, то есть нажатие становится незаметным. Поэтому
+    pressed идёт вниз по светлоте, как в light-теме. Границу залитой кнопки к фону страницы это опускает до
+    2.89, но нажатое состояние моментально, а сама кнопка опознаётся подписью с контрастом 6.42 — не
+    единственным признаком-цветом (MANUAL §10).
+    Синхронизация apps/client/src/design-system/tokens.ts — работа front/owner/001.
+  -->
+  <Color id="color.action.primary" light="#246BFD" dark="#246BFD" />
+  <Color id="color.action.primaryPressed" light="#1554D6" dark="#1554D6" />
+  <Color id="color.border.default" light="#DCE1EA" dark="#343945" />
+  <Color id="color.border.focus" light="#246BFD" dark="#6A99FF" />
+  <Color id="color.icon.primary" light="#273043" dark="#EEF1F7" />
+  <Color id="color.icon.secondary" light="#778095" dark="#AAB2C2" />
+  <Color id="color.status.error" light="#C83737" dark="#FF7373" />
+  <Color id="color.status.success" light="#23835A" dark="#55C18D" />
+  <Color id="color.status.warning" light="#B25E00" dark="#FFB861" />
+  <Color id="color.status.warningSurface" light="#FFF4E5" dark="#3A2A12" />
+  <Color id="color.status.errorSurface" light="#FEF4F4" dark="#3A1D1D" />
+  <Color id="color.skeleton" light="#E9EDF4" dark="#272C35" />
+  <!--
+    Guest-флоу: заливка выбранного состояния (DateChip, SlotItem). Отдельный токен, а не
+    color.action.primary: подпись на выбранном элементе — $color.text.onPrimary, и токен заведён, когда
+    dark-значение action.primary (#4D86FF) давало 3.40 — ниже WCAG AA 4.5:1 для текста 14sp. Здесь
+    5.57 / 5.27, то есть запас к порогу больше, чем у исправленного action.primary (4.57 в обеих темах).
+  -->
+  <Color id="color.guest.selectedSurface" light="#1F5FE0" dark="#2F63E0" />
+  <!--
+    Палитра акцентов карточек типов встреч: цвет плитки под глифом $color.text.onPrimary.
+    Индекс выводится детерминированно из EventType.id (helper eventTypeAccentIndex).
+    Цвет декоративен и смысла не кодирует; контраст к белому глифу — порог 3:1 (WCAG 1.4.11).
+  -->
+  <Color id="color.accent.1" light="#246BFD" dark="#4D86FF" />
+  <Color id="color.accent.2" light="#6C3CE0" dark="#8F6BF0" />
+  <Color id="color.accent.3" light="#0E7C86" dark="#28A0AC" />
+  <Color id="color.accent.4" light="#B25E00" dark="#D07E1F" />
+  <Color id="color.accent.5" light="#C2306B" dark="#DB5B8B" />
+  <Color id="color.accent.6" light="#1F7A45" dark="#2E9B5C" />
+</DesignTokens>

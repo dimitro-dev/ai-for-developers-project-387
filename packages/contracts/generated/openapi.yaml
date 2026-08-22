@@ -1,0 +1,819 @@
+openapi: 3.0.0
+info:
+  title: MiniCal API
+  version: 0.2.0
+tags: []
+paths:
+  /admin/bookings:
+    get:
+      operationId: getAdminUpcomingBookings
+      description: Get all upcoming bookings for all event types.
+      parameters: []
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Booking'
+  /admin/event-types:
+    get:
+      operationId: getAdminEventTypes
+      description: Get all event types owned by the calendar owner.
+      parameters: []
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/EventType'
+    post:
+      operationId: createAdminEventType
+      description: |-
+        Create a new event type.
+        Fails with DUPLICATE_EVENT_TYPE_ID if an event type with the same id exists.
+      parameters: []
+      responses:
+        '201':
+          description: The request has succeeded and a new resource has been created as a result.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EventType'
+        '400':
+          description: The server could not understand the request due to invalid syntax.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+        '409':
+          description: The request conflicts with the current state of the server.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DuplicateEventTypeId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateEventTypeRequest'
+  /admin/settings:
+    get:
+      operationId: getAdminSettings
+      description: Get current calendar settings. Requires onboarding to be completed.
+      parameters: []
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CalendarSettingsResponse'
+        '400':
+          description: The server could not understand the request due to invalid syntax.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CalendarNotConfigured'
+    put:
+      operationId: updateAdminSettings
+      description: Fully replace calendar settings. Requires onboarding to be completed.
+      parameters: []
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CalendarSettingsResponse'
+        '400':
+          description: The server could not understand the request due to invalid syntax.
+          content:
+            application/json:
+              schema:
+                anyOf:
+                  - $ref: '#/components/schemas/ValidationError'
+                  - $ref: '#/components/schemas/CalendarNotConfigured'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SetupRequest'
+  /admin/setup:
+    get:
+      operationId: getAdminSetup
+      description: Get current onboarding setup state of the calendar owner.
+      parameters: []
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SetupStateResponse'
+    put:
+      operationId: completeAdminSetup
+      description: |-
+        Complete initial owner onboarding.
+        Fails with ONBOARDING_ALREADY_COMPLETED if setup has already been done.
+      parameters: []
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CalendarSettingsResponse'
+        '400':
+          description: The server could not understand the request due to invalid syntax.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+        '409':
+          description: The request conflicts with the current state of the server.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OnboardingAlreadyCompleted'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SetupRequest'
+  /bookings:
+    post:
+      operationId: createPublicBooking
+      description: |-
+        Create a new booking.
+        Server validates the slot, computes endAtUtc from event type duration,
+        and checks for conflicts.
+
+        Idempotency. The optional `id` of the request body is the idempotency key.
+        201 means the booking was created by this request; 200 means the request was
+        an idempotent repeat and the body carries the booking created by an earlier
+        attempt — nothing was created. A request counts as a repeat when its key
+        matches an existing booking and its payload is equivalent: `eventTypeId`,
+        `startAtUtc` and every field of `guest` are equal as parsed values, not as
+        raw strings (the same instant written `...Z` and `....000Z` is the same
+        payload). The key `id` itself takes no part in the comparison. The same key
+        with a payload that is not equivalent fails with DUPLICATE_BOOKING_ID.
+        The comparison by key runs before the availability check and only for the key
+        that arrived in the request, so a slot taken by a different key still fails
+        with SLOT_UNAVAILABLE — idempotency never masks a real conflict.
+        Because `id` is optional, a client that needs a safe retry has to generate the
+        key before its first attempt: without a key a repeat cannot be recognised.
+      parameters: []
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Booking'
+        '201':
+          description: The request has succeeded and a new resource has been created as a result.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Booking'
+        '400':
+          description: The server could not understand the request due to invalid syntax.
+          content:
+            application/json:
+              schema:
+                anyOf:
+                  - $ref: '#/components/schemas/ValidationError'
+                  - $ref: '#/components/schemas/CalendarNotConfigured'
+                  - $ref: '#/components/schemas/SlotOutsideWindow'
+                  - $ref: '#/components/schemas/SlotNotAligned'
+                  - $ref: '#/components/schemas/GuestNameRequired'
+                  - $ref: '#/components/schemas/GuestEmailRequired'
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EventTypeNotFound'
+        '409':
+          description: The request conflicts with the current state of the server.
+          content:
+            application/json:
+              schema:
+                anyOf:
+                  - $ref: '#/components/schemas/SlotUnavailable'
+                  - $ref: '#/components/schemas/DuplicateBookingId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateBookingRequest'
+  /calendar:
+    get:
+      operationId: getPublicCalendar
+      description: |-
+        Get the publicly visible identity of the calendar: the owner display name.
+        Requires calendar owner to have completed onboarding — until then the
+        operation answers 400 CALENDAR_NOT_CONFIGURED, which is how onboarding state
+        is expressed publicly.
+      parameters: []
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicCalendarResponse'
+        '400':
+          description: The server could not understand the request due to invalid syntax.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CalendarNotConfigured'
+  /event-types:
+    get:
+      operationId: getPublicEventTypes
+      description: |-
+        List all event types available for public booking.
+        Requires calendar owner to have completed onboarding.
+      parameters: []
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/EventType'
+        '400':
+          description: The server could not understand the request due to invalid syntax.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CalendarNotConfigured'
+  /health:
+    get:
+      operationId: getHealth
+      description: Server health check.
+      parameters: []
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HealthResponse'
+  /slots:
+    get:
+      operationId: getPublicSlots
+      description: |-
+        Get available slots for a given event type.
+        Server computes a 14-day booking window in the owner's timezone.
+        Slots that are already booked or in the past are excluded.
+      parameters:
+        - name: eventTypeId
+          in: query
+          required: true
+          description: The event type id to get slots for.
+          schema:
+            type: string
+            minLength: 1
+            maxLength: 100
+          explode: false
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Slot'
+        '400':
+          description: The server could not understand the request due to invalid syntax.
+          content:
+            application/json:
+              schema:
+                anyOf:
+                  - $ref: '#/components/schemas/ValidationError'
+                  - $ref: '#/components/schemas/CalendarNotConfigured'
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EventTypeNotFound'
+components:
+  schemas:
+    AvailabilityRule:
+      type: object
+      required:
+        - daysOfWeek
+        - startLocal
+        - endLocal
+      properties:
+        daysOfWeek:
+          type: array
+          items:
+            $ref: '#/components/schemas/DayOfWeek'
+          minItems: 1
+          description: Days of the week this rule applies to.
+        startLocal:
+          allOf:
+            - $ref: '#/components/schemas/LocalTime'
+          description: Start of the working interval (local time, inclusive).
+        endLocal:
+          allOf:
+            - $ref: '#/components/schemas/LocalTime'
+          description: End of the working interval (local time, exclusive).
+      description: 'One availability rule: days of the week and a local time interval.'
+    Booking:
+      type: object
+      required:
+        - id
+        - eventTypeId
+        - eventTypeName
+        - startAtUtc
+        - endAtUtc
+        - guestName
+        - guestEmail
+        - createdAtUtc
+      properties:
+        id:
+          allOf:
+            - $ref: '#/components/schemas/Uuid'
+          description: Unique booking identifier (UUID).
+        eventTypeId:
+          type: string
+          maxLength: 100
+          description: Reference to the event type.
+        eventTypeName:
+          type: string
+          minLength: 1
+          maxLength: 200
+          description: |-
+            Event type name captured at booking time.
+            Snapshot: later renames of the event type do not change bookings already made,
+            and the value survives deletion of the event type.
+        startAtUtc:
+          type: string
+          format: date-time
+          description: Booking start instant in UTC.
+        endAtUtc:
+          type: string
+          format: date-time
+          description: Booking end instant in UTC (computed by the server).
+        guestName:
+          type: string
+          minLength: 1
+          maxLength: 200
+          description: Guest name at time of booking.
+        guestEmail:
+          type: string
+          minLength: 1
+          maxLength: 320
+          description: Guest email at time of booking.
+        guestNote:
+          type: string
+          maxLength: 5000
+          description: Optional note left by the guest.
+        createdAtUtc:
+          type: string
+          format: date-time
+          description: Timestamp when the booking was created.
+      description: A confirmed booking that locks a time interval for a guest.
+    CalendarNotConfigured:
+      type: object
+      required:
+        - code
+      properties:
+        code:
+          type: string
+          enum:
+            - CALENDAR_NOT_CONFIGURED
+      allOf:
+        - $ref: '#/components/schemas/ErrorResponse'
+      description: Calendar owner has not completed onboarding setup yet.
+    CalendarSettings:
+      type: object
+      required:
+        - timeZone
+        - availabilityRules
+        - slotIntervalMinutes
+      properties:
+        timeZone:
+          allOf:
+            - $ref: '#/components/schemas/IanaTimeZone'
+          description: IANA timezone for the calendar.
+        availabilityRules:
+          type: array
+          items:
+            $ref: '#/components/schemas/AvailabilityRule'
+          minItems: 1
+          description: Rules defining working hours. At least one rule is required.
+        slotIntervalMinutes:
+          type: integer
+          format: int32
+          minimum: 15
+          maximum: 60
+          description: Slot grid interval in minutes (must be a divisor of 60, >= 15).
+      description: Calendar settings that control slot generation.
+    CalendarSettingsResponse:
+      type: object
+      required:
+        - displayName
+        - timeZone
+        - availabilityRules
+        - slotIntervalMinutes
+        - publicUrl
+      properties:
+        displayName:
+          type: string
+          maxLength: 200
+          description: Owner display name.
+        timeZone:
+          allOf:
+            - $ref: '#/components/schemas/IanaTimeZone'
+          description: IANA timezone for the calendar.
+        availabilityRules:
+          type: array
+          items:
+            $ref: '#/components/schemas/AvailabilityRule'
+          minItems: 1
+          description: Rules defining working hours.
+        slotIntervalMinutes:
+          type: integer
+          format: int32
+          minimum: 15
+          maximum: 60
+          description: Slot grid interval in minutes.
+        publicUrl:
+          type: string
+          format: uri
+          description: Canonical public URL of the guest calendar (web client). Value comes from deployment env (PUBLIC_WEB_URL).
+      description: Full calendar settings response including owner display name.
+    CreateBookingRequest:
+      type: object
+      required:
+        - eventTypeId
+        - startAtUtc
+        - guest
+      properties:
+        eventTypeId:
+          type: string
+          minLength: 1
+          maxLength: 100
+          description: Reference to the event type to book.
+        startAtUtc:
+          type: string
+          format: date-time
+          description: Desired booking start instant in UTC. Server computes endAtUtc.
+        id:
+          allOf:
+            - $ref: '#/components/schemas/Uuid'
+          description: |-
+            Optional idempotency key (UUID). Stays optional: without it the server
+            generates the booking id, so a repeat has nothing to be deduplicated by.
+            A repeat with the same key and an equivalent payload returns 200 with the
+            booking created earlier; a repeat with the same key and a different payload
+            fails with DUPLICATE_BOOKING_ID.
+        guest:
+          allOf:
+            - $ref: '#/components/schemas/GuestDetails'
+          description: Guest contact details.
+      description: Request payload to create a new booking.
+    CreateEventTypeRequest:
+      type: object
+      required:
+        - id
+        - name
+        - durationMinutes
+      properties:
+        id:
+          type: string
+          minLength: 1
+          maxLength: 100
+          description: Unique, stable identifier chosen by the owner.
+        name:
+          type: string
+          minLength: 1
+          maxLength: 200
+          description: Display name of the event type.
+        description:
+          type: string
+          maxLength: 2000
+          description: Optional description of what this event type is for.
+        durationMinutes:
+          type: integer
+          format: int32
+          minimum: 1
+          maximum: 1440
+          description: Meeting duration in minutes.
+      description: Request payload to create a new event type.
+    DayOfWeek:
+      type: string
+      enum:
+        - Monday
+        - Tuesday
+        - Wednesday
+        - Thursday
+        - Friday
+        - Saturday
+        - Sunday
+      description: Day of the week.
+    DuplicateBookingId:
+      type: object
+      required:
+        - code
+      properties:
+        code:
+          type: string
+          enum:
+            - DUPLICATE_BOOKING_ID
+      allOf:
+        - $ref: '#/components/schemas/ErrorResponse'
+      description: |-
+        The provided id key belongs to an existing booking whose payload differs from the request.
+        A repeat with an equivalent payload is not an error: it returns 200 with the existing booking.
+    DuplicateEventTypeId:
+      type: object
+      required:
+        - code
+      properties:
+        code:
+          type: string
+          enum:
+            - DUPLICATE_EVENT_TYPE_ID
+      allOf:
+        - $ref: '#/components/schemas/ErrorResponse'
+      description: EventType with the given id already exists.
+    ErrorResponse:
+      type: object
+      required:
+        - code
+        - message
+      properties:
+        code:
+          type: string
+          maxLength: 100
+          description: Machine-readable error code.
+        message:
+          type: string
+          maxLength: 2000
+          description: Human-readable error description.
+      description: Base error response with machine-readable code and human-readable message.
+    EventType:
+      type: object
+      required:
+        - id
+        - name
+        - durationMinutes
+      properties:
+        id:
+          type: string
+          maxLength: 100
+          description: Unique, stable identifier chosen by the owner.
+        name:
+          type: string
+          maxLength: 200
+          description: Display name of the event type.
+        description:
+          type: string
+          maxLength: 2000
+          description: Optional description of what this event type is for.
+        durationMinutes:
+          type: integer
+          format: int32
+          minimum: 1
+          maximum: 1440
+          description: Meeting duration in minutes.
+      description: An event type representing a kind of meeting that guests can book.
+    EventTypeNotFound:
+      type: object
+      required:
+        - code
+      properties:
+        code:
+          type: string
+          enum:
+            - EVENT_TYPE_NOT_FOUND
+      allOf:
+        - $ref: '#/components/schemas/ErrorResponse'
+      description: Referenced EventType does not exist.
+    GuestDetails:
+      type: object
+      required:
+        - name
+        - email
+      properties:
+        name:
+          type: string
+          minLength: 1
+          maxLength: 200
+          description: Guest name (required).
+        email:
+          type: string
+          minLength: 1
+          maxLength: 320
+          pattern: ^[^@\s]+@[^@\s]+\.[^@\s]+$
+          description: Guest email (required).
+        note:
+          type: string
+          maxLength: 5000
+          description: Optional note from the guest.
+      description: Guest contact details stored as a snapshot within each Booking.
+    GuestEmailRequired:
+      type: object
+      required:
+        - code
+      properties:
+        code:
+          type: string
+          enum:
+            - GUEST_EMAIL_REQUIRED
+      allOf:
+        - $ref: '#/components/schemas/ErrorResponse'
+      description: Guest email was not provided or is invalid.
+    GuestNameRequired:
+      type: object
+      required:
+        - code
+      properties:
+        code:
+          type: string
+          enum:
+            - GUEST_NAME_REQUIRED
+      allOf:
+        - $ref: '#/components/schemas/ErrorResponse'
+      description: Guest name was not provided.
+    HealthResponse:
+      type: object
+      required:
+        - status
+      properties:
+        status:
+          type: string
+          enum:
+            - ok
+      description: Health check response.
+    IanaTimeZone:
+      type: string
+      pattern: ^[A-Za-z0-9+_-]+(/[A-Za-z0-9+_-]+){0,2}$
+      description: IANA timezone identifier.
+    LocalTime:
+      type: string
+      pattern: ^([01][0-9]|2[0-3]):[0-5][0-9]$
+      description: Local time in HH:mm format (24-hour).
+    OnboardingAlreadyCompleted:
+      type: object
+      required:
+        - code
+      properties:
+        code:
+          type: string
+          enum:
+            - ONBOARDING_ALREADY_COMPLETED
+      allOf:
+        - $ref: '#/components/schemas/ErrorResponse'
+      description: Calendar owner has already completed onboarding; cannot set up again.
+    PublicCalendarResponse:
+      type: object
+      required:
+        - displayName
+      properties:
+        displayName:
+          type: string
+          maxLength: 200
+          description: Owner display name.
+      description: |-
+        Publicly visible projection of the owner profile.
+        Carries the display name only: calendar settings (availabilityRules,
+        slotIntervalMinutes, publicUrl) are never disclosed to guests.
+    SetupRequest:
+      type: object
+      required:
+        - displayName
+        - timeZone
+        - availabilityRules
+        - slotIntervalMinutes
+      properties:
+        displayName:
+          type: string
+          minLength: 1
+          maxLength: 200
+          description: Owner display name.
+        timeZone:
+          allOf:
+            - $ref: '#/components/schemas/IanaTimeZone'
+          description: IANA timezone for the calendar.
+        availabilityRules:
+          type: array
+          items:
+            $ref: '#/components/schemas/AvailabilityRule'
+          minItems: 1
+          description: Rules defining working hours.
+        slotIntervalMinutes:
+          type: integer
+          format: int32
+          minimum: 15
+          maximum: 60
+          description: Slot grid interval in minutes.
+      description: Request payload to complete initial owner setup or update settings.
+    SetupStateResponse:
+      type: object
+      required:
+        - onboardingCompleted
+      properties:
+        onboardingCompleted:
+          type: boolean
+          description: Whether onboarding has been completed.
+        displayName:
+          type: string
+          maxLength: 200
+          description: Owner display name. Present only if onboarding is completed.
+      description: Response returned for setup state query (GET /admin/setup).
+    Slot:
+      type: object
+      required:
+        - startAtUtc
+        - endAtUtc
+        - eventTypeId
+      properties:
+        startAtUtc:
+          type: string
+          format: date-time
+          description: Slot start instant in UTC.
+        endAtUtc:
+          type: string
+          format: date-time
+          description: Slot end instant in UTC (startAtUtc + eventType.durationMinutes).
+        eventTypeId:
+          type: string
+          maxLength: 100
+          description: The event type id this slot is computed for.
+      description: |-
+        A computed available time slot for a given event type.
+        Slots are not persisted; they are computed on the fly by the server
+        based on owner settings, event type duration, and existing bookings.
+    SlotNotAligned:
+      type: object
+      required:
+        - code
+      properties:
+        code:
+          type: string
+          enum:
+            - SLOT_NOT_ALIGNED
+      allOf:
+        - $ref: '#/components/schemas/ErrorResponse'
+      description: Requested slot start does not align with the slot interval grid.
+    SlotOutsideWindow:
+      type: object
+      required:
+        - code
+      properties:
+        code:
+          type: string
+          enum:
+            - SLOT_OUTSIDE_WINDOW
+      allOf:
+        - $ref: '#/components/schemas/ErrorResponse'
+      description: Requested slot start is outside the 14-day booking window.
+    SlotUnavailable:
+      type: object
+      required:
+        - code
+      properties:
+        code:
+          type: string
+          enum:
+            - SLOT_UNAVAILABLE
+      allOf:
+        - $ref: '#/components/schemas/ErrorResponse'
+      description: Requested slot is already booked or conflicts with an existing booking.
+    Uuid:
+      type: string
+      format: uuid
+      description: Universally unique identifier (UUID v4).
+    ValidationError:
+      type: object
+      required:
+        - code
+      properties:
+        code:
+          type: string
+          enum:
+            - VALIDATION_ERROR
+      allOf:
+        - $ref: '#/components/schemas/ErrorResponse'
+      description: Generic validation error — input does not satisfy transport constraints.

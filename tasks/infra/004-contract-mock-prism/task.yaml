@@ -1,0 +1,21 @@
+id: infra/004
+slug: contract-mock-prism
+title: Contract mock server (Prism)
+track: full
+legacyId: infra-004
+gates:
+  brief:
+    status: согласовано
+    sha256: 2d58e971dbcda96df5b46f18a0bf9ff4f4c8bd26503e79fa95c436e844c0761f
+  adr:
+    status: согласовано
+    sha256: d080d24c1cf3e4b8c5af1bae6dbd4c1e83fa9f2ccb7898a62de984ac454f47aa
+  plan:
+    status: согласовано
+    sha256: fbaf037c0ff88e818a5168a9fac3723dc12f7e86a92a810865852859053057f0
+  result:
+    status: согласовано
+    sha256: cf1971f5ea79cd7f1dc6a3004e9397a576e7ddbc3630f189d4227f0a548b037b
+meta:
+  rev: 1
+  selfHash: 92ac9c261774ab7c7432f4f657ce475dd74ba77a263be6b2a5739d40d4930da2

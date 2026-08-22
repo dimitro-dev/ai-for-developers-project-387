@@ -1,0 +1,35 @@
+id: front/owner/001
+slug: owner-screens
+title: Экраны владельца
+track: full
+legacyId: front-owner-001
+depends:
+  - back/001
+  - front/guest/001
+  - front/ui/003
+queue:
+  after:
+    - front/ui/003
+  rationale: Экраны владельца по синхронизированным спекам; приоритет перед back/002–003 — решение владельца 2026-08-17
+gates:
+  brief:
+    status: согласовано
+    approvedAt: 2026-08-17
+    sha256: 4e1db82d7bb191ee8a99e8839e54e4c56c2ffd9abe1d3b11ba1ab60b63ef792b
+  adr:
+    status: согласовано
+    approvedAt: 2026-08-17
+    sha256: 565834f8dfb6fe4e36d32c5aa9dfe2145334b9f513550144ead3d07ae431e09a
+  plan:
+    status: согласовано
+    approvedAt: 2026-08-17
+    sha256: ad8454b1a2d26fdceac98e403e00fe71d2140b76fa0f425b2dcdbb953b400baf
+  result:
+    status: согласовано
+    approvedAt: 2026-08-18
+    sha256: b8c48409708b121be525c3eecb2438ccd875b1eb1be4fc8e4003483c5063df86
+workspace:
+  mr: https://github.com/dimitro-dev/ai-for-developers-project-386/pull/13
+meta:
+  rev: 13
+  selfHash: cecf511fc8c34c9e54138f9e9f2da2f490bdea1750764cb79e733c5de75ff9d4

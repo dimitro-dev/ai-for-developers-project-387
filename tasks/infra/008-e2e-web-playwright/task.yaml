@@ -1,0 +1,24 @@
+id: infra/008
+slug: e2e-web-playwright
+title: "Web e2e на Playwright: сквозной прогон гостевого сценария"
+track: full
+depends:
+  - front/guest/002
+  - back/001
+  - infra/006
+queue:
+  after:
+    - infra/001
+  rationale: "Web e2e дешевле native: testID уже проставлены, react-native-web мапит их в data-testid; эмулятор и APK не нужны. Защищает гостевой сценарий от регрессий во время работы над owner-flow и снимает часть объёма с infra/007"
+gates:
+  brief:
+    status: черновик
+  adr:
+    status: черновик
+  plan:
+    status: черновик
+  result:
+    status: черновик
+meta:
+  rev: 5
+  selfHash: 12b77581acc5978a36aa4f78a9949c6f6024c992f604e9f2a84f96ea3331326b

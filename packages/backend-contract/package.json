@@ -1,0 +1,14 @@
+{
+  "name": "@minical/backend-contract",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Generated transport types и Zod runtime schemas по OpenAPI-контракту MiniCal",
+  "type": "module",
+  "exports": {
+    ".": "./src/generated/index.ts",
+    "./zod": "./src/generated/zod.gen.ts"
+  },
+  "dependencies": {
+    "zod": "^4.0.0"
+  }
+}

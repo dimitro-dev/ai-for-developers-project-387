@@ -1,0 +1,23 @@
+id: infra/007
+slug: e2e-native-framework
+title: "Выбор native e2e-фреймворка: Detox, Maestro или Appium"
+track: full
+depends:
+  - infra/002
+  - front/guest/002
+queue:
+  after:
+    - infra/008
+  rationale: Выбор native e2e-инструмента (Detox / Maestro / Appium) и способа его запуска; нужен работающий APK-контур из infra/002 и эмулятор с аппаратной виртуализацией — на macOS-хосте только вне Docker
+gates:
+  brief:
+    status: черновик
+  adr:
+    status: черновик
+  plan:
+    status: черновик
+  result:
+    status: черновик
+meta:
+  rev: 7
+  selfHash: 8a69d0543726d8a5747482f06accb8a23099b8e2815030452006876e610672a3

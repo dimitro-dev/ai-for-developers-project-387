@@ -1,0 +1,33 @@
+id: infra/001
+slug: postgres-compose
+title: PostgreSQL runtime-контур на Docker Compose
+track: full
+legacyId:
+  - infra-001
+  - "004"
+queue:
+  after:
+    - front/guest/002
+  rationale: Контейнер PostgreSQL — шаг к персистентности (back/002); Docker Engine — внешняя предпосылка
+gates:
+  brief:
+    status: согласовано
+    approvedAt: 2026-08-16
+    sha256: c4fb55535bac90938f343efe7099fc9e44dc509a9a3baec58d41cceeea74d9bc
+  adr:
+    status: согласовано
+    approvedAt: 2026-08-16
+    sha256: 698dbf1823697f243d566be4ee319e057343c1781003400bcfbcbd45431643d3
+  plan:
+    status: согласовано
+    approvedAt: 2026-08-16
+    sha256: 81e43977ecd9e962f1f8003b191dca8473179a9da2734c1fe0af630b706e1c60
+  result:
+    status: согласовано
+    approvedAt: 2026-08-16
+    sha256: 4ec66e0e64f514db11322e86b2c8656b5fa4694ddbbf9446ec3d07ea186869da
+workspace:
+  mr: https://github.com/dimitro-dev/ai-for-developers-project-386/pull/12
+meta:
+  rev: 8
+  selfHash: c5250e6e708ae72cc59099817e8d41116a388afda6aea96b4fe3aea835cb9049

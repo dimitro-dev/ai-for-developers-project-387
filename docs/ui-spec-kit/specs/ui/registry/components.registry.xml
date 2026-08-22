@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ComponentRegistry version="0.1">
+  <Component tag="SafeArea" reactNative="AppSafeArea" import="@/design-system/layout/AppSafeArea" />
+  <Component tag="Stack" reactNative="Stack" import="@/design-system/layout/Stack" status="reserved" />
+  <Component tag="Row" reactNative="Row" import="@/design-system/layout/Row" />
+  <Component tag="Column" reactNative="Column" import="@/design-system/layout/Column" />
+  <Component tag="Center" reactNative="Center" import="@/design-system/layout/Center" />
+  <Component tag="ScrollView" reactNative="AppScrollView" import="@/design-system/layout/AppScrollView" />
+  <Component tag="Section" reactNative="Section" import="@/design-system/layout/Section" />
+  <Component tag="Spacer" reactNative="Spacer" import="@/design-system/layout/Spacer" />
+  <Component tag="Overlay" reactNative="Overlay" import="@/design-system/layout/Overlay" status="reserved" />
+  <Component tag="Header" reactNative="AppHeader" import="@/design-system/components/AppHeader" />
+  <Component tag="ProgressHeader" reactNative="ProgressHeader" import="@/design-system/components/ProgressHeader" />
+  <Component tag="Text" reactNative="AppText" import="@/design-system/components/AppText" />
+  <Component tag="Image" reactNative="AppImage" import="@/design-system/components/AppImage" />
+  <Component tag="Icon" reactNative="AppIcon" import="@/design-system/components/AppIcon" />
+  <Component tag="Button" reactNative="AppButton" import="@/design-system/components/AppButton" />
+  <Component tag="IconButton" reactNative="AppIconButton" import="@/design-system/components/AppIconButton" />
+  <Component tag="TextField" reactNative="AppTextField" import="@/design-system/components/AppTextField" />
+  <Component tag="SelectField" reactNative="AppSelectField" import="@/design-system/components/AppSelectField" />
+  <Component tag="TimeField" reactNative="TimeField" import="@/design-system/components/TimeField" />
+  <Component tag="WeekdaySelector" reactNative="WeekdaySelector" import="@/design-system/components/WeekdaySelector" />
+  <Component tag="DurationSelector" reactNative="DurationSelector" import="@/features/event-types/components/DurationSelector" />
+  <Component tag="BottomSheet" reactNative="AppBottomSheet" import="@/design-system/components/AppBottomSheet" />
+  <Component tag="DragHandle" reactNative="DragHandle" import="@/design-system/components/DragHandle" />
+  <Component tag="BottomNavigation" reactNative="OwnerBottomNavigation" import="@/navigation/OwnerBottomNavigation" />
+  <Component tag="BottomNavigationItem" reactNative="BottomNavigationItem" import="@/navigation/BottomNavigationItem" />
+  <Component tag="ScheduleCard" reactNative="ScheduleCard" import="@/features/availability/components/ScheduleCard" />
+  <Component tag="MeetingCard" reactNative="MeetingCard" import="@/features/meetings/components/MeetingCard" />
+  <Component tag="EventTypeCard" reactNative="EventTypeCard" import="@/features/event-types/components/EventTypeCard" />
+  <Component tag="SettingsRow" reactNative="SettingsRow" import="@/features/settings/components/SettingsRow" />
+  <Component tag="EmptyState" reactNative="EmptyState" import="@/design-system/components/EmptyState" />
+  <Component tag="AnimatedSetupIllustration" reactNative="AnimatedSetupIllustration" import="@/features/setup/components/AnimatedSetupIllustration" />
+  <Component tag="TimezoneLabel" reactNative="TimezoneLabel" import="@/design-system/components/TimezoneLabel" />
+  <Component tag="Skeleton" reactNative="Skeleton" import="@/design-system/components/Skeleton" />
+  <Component tag="StateView" reactNative="StateView" import="@/shared/ui-state/StateView" />
+  <Component tag="Repeat" reactNative="Repeat" import="@/shared/ui-state/Repeat" />
+  <Component tag="ValidationMessage" reactNative="ValidationMessage" import="@/design-system/components/ValidationMessage" />
+  <Component tag="ProgressIndicator" reactNative="ProgressIndicator" import="@/design-system/components/ProgressIndicator" />
+  <Component tag="ProgressBar" reactNative="ProgressBar" import="@/design-system/components/ProgressBar" />
+  <Component tag="ConfirmationDialog" reactNative="ConfirmationDialog" import="@/design-system/components/ConfirmationDialog" />
+  <Component tag="SlotItem" reactNative="SlotItem" import="@/features/slots/components/SlotItem" />
+  <Component tag="SlotGrid" reactNative="SlotGrid" import="@/features/slots/components/SlotGrid" />
+  <Component tag="DateStrip" reactNative="DateStrip" import="@/features/slots/components/DateStrip" />
+  <Component tag="DateChip" reactNative="DateChip" import="@/features/slots/components/DateChip" />
+  <Component tag="InlineAlert" reactNative="InlineAlert" import="@/design-system/components/InlineAlert" />
+  <Component tag="PublicEventTypeCard" reactNative="PublicEventTypeCard" import="@/features/guest/components/PublicEventTypeCard" />
+  <Component tag="BookingSummaryCard" reactNative="BookingSummaryCard" import="@/features/guest/components/BookingSummaryCard" />
+  <Component tag="ConfirmationDetails" reactNative="ConfirmationDetails" import="@/features/guest/components/ConfirmationDetails" />
+  <!--
+    Реестр helper-функций, используемых в bind-выражениях `{fn(...)}` спеков (AUDIT.md C11).
+    Каждый вызов в спеках обязан иметь запись здесь: имя, сигнатура, семантика, модуль-владелец.
+    Функции языка validation-выражений (trim, matches, isEmail) — builtins, не helpers.
+  -->
+  <Helpers>
+    <Helper name="formatTime" signature="(atUtc: utcDateTime, timeZone: IanaTimeZone) =&gt; string" module="@/shared/datetime">Время «HH:mm» момента atUtc в указанной timezone (owner-флоу — timezone владельца).</Helper>
+    <Helper name="formatUtcOffset" signature="(timeZone: IanaTimeZone) =&gt; string" module="@/shared/datetime">Подпись смещения timezone вида «UTC+02:00» на текущую дату.</Helper>
+    <Helper name="formattedSlot" signature="(startAtUtc: utcDateTime, endAtUtc: utcDateTime) =&gt; string" module="@/shared/datetime">Читаемая подпись выбранного слота — дата и интервал времени в локальной timezone гостя («31 июля · 10:00–10:30»).</Helper>
+    <Helper name="dateLabel" signature="(atUtc: utcDateTime) =&gt; string" module="@/shared/datetime">Дата момента atUtc в локальной timezone гостя.</Helper>
+    <Helper name="timeLabel" signature="(atUtc: utcDateTime) =&gt; string" module="@/shared/datetime">Время «HH:mm» момента atUtc в локальной timezone гостя.</Helper>
+    <Helper name="groupBookingsByOwnerDate" signature="(bookings: BookingView[], timeZone: IanaTimeZone) =&gt; { id: string; title: string; bookings: BookingView[] }[]" module="@/shared/datetime">Группировка встреч по календарной дате в timezone владельца; группы и встречи внутри отсортированы по startAt по возрастанию.</Helper>
+    <Helper name="formatWeekdays" signature="(daysOfWeek: Weekday[]) =&gt; string" module="@/features/availability/lib">Компактная подпись дней недели («Пн–Пт», «Пн, Ср, Пт»); смежные дни сворачиваются в диапазон.</Helper>
+    <Helper name="formatDaysOff" signature="(intervals: WorkingInterval[]) =&gt; string" module="@/features/availability/lib">Перечисление дней недели, не покрытых ни одним интервалом («Выходные: Сб, Вс»).</Helper>
+    <Helper name="formatAvailabilitySummary" signature="(rules: AvailabilityRule[]) =&gt; string" module="@/features/availability/lib">Краткая сводка графика для settings row («Пн–Пт · 09:00–18:00»).</Helper>
+    <Helper name="toAvailabilityRules" signature="(intervals: WorkingInterval[]) =&gt; AvailabilityRule[]" module="@/features/availability/lib">Маппинг view-интервалов в контрактные правила: отбрасывает client-only id, приводит Weekday (нижний регистр) к контрактному DayOfWeek.</Helper>
+    <Helper name="overwriteMessage" signature="(intervals: WorkingInterval[], startLocal: localTime, endLocal: localTime) =&gt; string" module="@/features/availability/lib">Текст подтверждения перезаписи индивидуальных интервалов новым временем.</Helper>
+    <Helper name="applyDaysLabel" signature="(count: int32) =&gt; string" module="@/features/availability/lib">Подпись CTA bottom sheet по числу выбранных дней («Применить к 5 дням»).</Helper>
+    <Helper name="durationLabel" signature="(durationMinutes: int32) =&gt; string" module="@/features/event-types/lib">Читаемая длительность встречи («30 минут», «1 час»).</Helper>
+    <Helper name="fieldError" signature="(field: string) =&gt; string | null" module="@/shared/forms">Сообщение из $state.fieldErrors для поля field; null, если ошибки нет.</Helper>
+    <Helper name="fullDateLabel" signature="(date: string) =&gt; string" module="@/shared/datetime">Полная подпись календарной даты формата YYYY-MM-DD («Пятница, 31 июля»); служит и accessibilityLabel чипа даты.</Helper>
+    <Helper name="availableDates" signature="(slots: Slot[], timeZone: IanaTimeZone) =&gt; AvailableDate[]" module="@/features/slots/lib">Календарные даты (YYYY-MM-DD в timeZone гостя), у которых есть хотя бы один слот, по возрастанию; каждая с подписями дня недели и числа. Даты без слотов в результат не попадают.</Helper>
+    <Helper name="slotsOnDate" signature="(slots: Slot[], date: string, timeZone: IanaTimeZone) =&gt; Slot[]" module="@/features/slots/lib">Слоты, попадающие на календарную дату date в timeZone гостя, хронологически по startAtUtc.</Helper>
+    <Helper name="selectedSlotMissing" signature="(slots: Slot[], selected: Slot | null) =&gt; boolean" module="@/features/slots/lib">true, если ранее выбранного слота больше нет в перезагруженном наборе (слот заняли). При selected == null возвращает false.</Helper>
+    <Helper name="eventTypeAccentIndex" signature="(id: string) =&gt; int32" module="@/features/event-types/lib">Индекс акцентного цвета плитки типа встречи: 32-битный FNV-1a от EventType.id по модулю 6. Один id всегда даёт один индекс; результат не зависит ни от порядка элементов, ни от появления новых типов.</Helper>
+    <Helper name="newBookingKey" signature="() =&gt; string" module="@/features/guest/lib">Новый UUID v4 — ключ идемпотентности CreateBookingRequest.id. Генерируется до первой попытки создания брони, чтобы повтор был распознаваем сервером.</Helper>
+  </Helpers>
+</ComponentRegistry>

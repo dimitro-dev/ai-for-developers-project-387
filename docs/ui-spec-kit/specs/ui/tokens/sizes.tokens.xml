@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<DesignTokens version="0.1">
+  <Size id="size.touch.android" value="48" />
+  <Size id="size.button.height" value="48" />
+  <Size id="size.input.height" value="48" />
+  <Size id="size.header.height" value="56" />
+  <Size id="size.bottomNav.height" value="64" />
+  <Size id="size.icon.small" value="18" />
+  <Size id="size.icon.medium" value="22" />
+  <Size id="size.icon.large" value="32" />
+  <Size id="size.dragHandle.width" value="36" />
+  <Size id="size.dragHandle.height" value="4" />
+  <Size id="size.sheet.maxHeight" value="720" />
+  <Size id="size.card.meeting.height" value="88" />
+  <Size id="size.card.eventType.height" value="112" />
+  <Size id="size.card.schedule.height" value="72" />
+  <Size id="size.row.settings.height" value="64" />
+  <Size id="size.slot.height" value="64" />
+  <Size id="size.card.summary.height" value="88" />
+  <Size id="size.dateChip.width" value="64" />
+  <Size id="size.dateChip.height" value="72" />
+  <Size id="size.textarea.minHeight" value="96" />
+  <Size id="size.icon.hero" value="72" />
+</DesignTokens>

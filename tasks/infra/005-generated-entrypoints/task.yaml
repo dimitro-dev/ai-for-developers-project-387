@@ -1,0 +1,23 @@
+id: infra/005
+slug: generated-entrypoints
+title: Публичные точки входа generated-пакетов
+track: full
+legacyId: infra-005
+queue:
+  rationale: "Точки входа generated-пакетов: без exports пакеты не импортируются по имени; блокировала контракт и backend"
+gates:
+  brief:
+    status: согласовано
+    sha256: 289e3f9ee64d96f4bea076985809d009b5bc0e5c3a67c4e44ad81fbeb8fba9a6
+  adr:
+    status: согласовано
+    sha256: dcb70bad553a8f83fcf745394d4c106567c100e802dcaa4d98ac983201ee2186
+  plan:
+    status: согласовано
+    sha256: fd1d4e2583654e99405d64b3231a57d1ad84181e9df0e3720598bf3a7bbcc246
+  result:
+    status: согласовано
+    sha256: 61aeac4fde8a03786e6bce7009e4d8f92888179751693be4aa31722fc3b5d913
+meta:
+  rev: 1
+  selfHash: 559c8cbc5270b363c935be9a2f560ba21a854570031f62c83e0c5a1a0da952b7

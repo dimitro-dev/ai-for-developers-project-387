@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<DesignTokens version="0.1">
+  <Spacing id="space.0" value="0" />
+  <Spacing id="space.4" value="4" />
+  <Spacing id="space.8" value="8" />
+  <Spacing id="space.12" value="12" />
+  <Spacing id="space.16" value="16" />
+  <Spacing id="space.20" value="20" />
+  <Spacing id="space.24" value="24" />
+  <Spacing id="space.32" value="32" />
+  <Spacing id="space.40" value="40" />
+  <Spacing id="space.48" value="48" />
+  <Spacing id="space.64" value="64" />
+</DesignTokens>

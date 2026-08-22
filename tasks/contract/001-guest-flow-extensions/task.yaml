@@ -1,0 +1,31 @@
+id: contract/001
+slug: guest-flow-extensions
+title: Расширение контракта под гостевой макет и закрытие расхождений, найденных в `task-back-001`
+track: full
+legacyId: contract-001
+depends:
+  - infra/005
+  - front/ui/001
+  - infra/004
+queue:
+  after:
+    - infra/005
+  parallel:
+    - front/ui/002
+  rationale: "Контракт вперёд кода: расширения по макету гостевого флоу и гапы G1, G2, G4 — дешевле до реализации backend"
+gates:
+  brief:
+    status: согласовано
+    sha256: 74da8e6aaa313b19da0cc95a2df5368535fe02bfd00132529e2b39a5b083a8a3
+  adr:
+    status: согласовано
+    sha256: 2b152591347d2102a89c8426fc75ebdd19e24e0b1ecd7b5a5d8ad14d67781992
+  plan:
+    status: согласовано
+    sha256: 1c3d75336f2979fb53b089abaae770737b4a7defbe989ed60ec937e85887174a
+  result:
+    status: согласовано
+    sha256: 64337e826f240ccdd06293d02da98a3147998c6e5ba6c96d8f2895901cc8f468
+meta:
+  rev: 1
+  selfHash: 37d813f8b3e637637ea242a33fd459ecdffd44a7d6d0377973607efdaeb974e4

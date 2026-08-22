@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<DesignTokens version="0.1">
+  <Radius id="radius.8" value="8" />
+  <Radius id="radius.12" value="12" />
+  <Radius id="radius.16" value="16" />
+  <Radius id="radius.20" value="20" />
+  <Radius id="radius.24" value="24" />
+  <Radius id="radius.pill" value="999" />
+</DesignTokens>
