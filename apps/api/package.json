@@ -1,0 +1,20 @@
+{
+  "name": "@minical/api",
+  "version": "0.1.0",
+  "private": true,
+  "description": "REST API MiniCal: 12 операций контракта на Express 5 поверх in-memory хранилища",
+  "type": "module",
+  "dependencies": {
+    "@minical/backend-contract": "*",
+    "@minical/database": "*",
+    "express": "^5.2.1",
+    "pg": "^8.23.0",
+    "zod": "^4.0.0"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.6",
+    "@types/node": "^26.1.2",
+    "@types/pg": "^8.23.1",
+    "yaml": "^2.9.0"
+  }
+}

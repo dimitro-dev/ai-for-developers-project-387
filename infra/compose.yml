@@ -1,0 +1,83 @@
+# Локальный учебный runtime-контур MiniCal.
+# Наружу не публикуется: пароль по умолчанию слабый, auth в MVP нет.
+# Запуск — цель `make db-up` из корня или `make up` в этом каталоге (см. README зоны).
+name: minical
+
+services:
+  postgres:
+    image: postgres:18
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-minical}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-minical}
+      POSTGRES_DB: ${POSTGRES_DB:-minical}
+      # Читается init-скриптом, штатному entrypoint неизвестна.
+      POSTGRES_TEST_DB: ${POSTGRES_TEST_DB:-minical_test}
+      # В образе postgres:18 каталог данных по умолчанию — /var/lib/postgresql/18/docker;
+      # закрепляем путь явно, чтобы он не поехал при смене мажора.
+      PGDATA: /var/lib/postgresql/data
+    ports:
+      - "${POSTGRES_PORT:-5432}:5432"
+    volumes:
+      # Монтируется родительский каталог, а не сам PGDATA: образ объявляет VOLUME
+      # /var/lib/postgresql, и монтирование внутрь него оставляет анонимный том на каждый
+      # цикл up/down. Каталог данных при этом остаётся /var/lib/postgresql/data (PGDATA выше).
+      - postgres-data:/var/lib/postgresql
+      # Скрипты отрабатывают только при инициализации пустого каталога данных.
+      - ./postgres/initdb:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "pg_isready -U ${POSTGRES_USER:-minical} -d ${POSTGRES_DB:-minical}",
+        ]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+
+  # Приложение целиком — один образ: API и оба web-бандла раздаёт один процесс (см. README зоны).
+  # Профиль `app` держит сервис вне жизненного цикла базы: `make up`, `make db-*` и job compose
+  # в CI поднимают только postgres и не платят за сборку образа. Полный контур — `make up-app`.
+  api:
+    profiles: ["app"]
+    build:
+      # Dockerfile лежит в корне репозитория, а compose-файл — в infra/: контекст на уровень выше.
+      context: ..
+      dockerfile: Dockerfile
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      # Строка собирается из тех же подстановок, что и у postgres: переопределение POSTGRES_* через
+      # infra/.env должно доезжать до приложения, иначе оно стучалось бы не в ту базу. Hostname —
+      # имя сервиса: внутри сети compose это postgres, а не localhost.
+      # Значения подставляются в URL как есть, без процентного кодирования, поэтому пароль с
+      # `@`, `/`, `:` или `#` сломает разбор строки: для локального контура держите пароль
+      # URL-безопасным.
+      DATABASE_URL: postgres://${POSTGRES_USER:-minical}:${POSTGRES_PASSWORD:-minical}@postgres:5432/${POSTGRES_DB:-minical}
+      PORT: "3001"
+      # В образе гостевую половину раздаёт тот же процесс на том же порту, поэтому дефолт конфига
+      # (адрес dev-сервера Expo) здесь неверен всегда.
+      PUBLIC_WEB_URL: http://localhost:3001
+      # Пустое значение config.ts трактует как выключено — так же, как отсутствие переменной.
+      SEED_DEMO: ${SEED_DEMO:-}
+    ports:
+      - "3001:3001"
+    # Без healthcheck `up --wait` дожидается лишь состояния running — то есть момента до
+    # применения миграций и до `listen`; dependency readiness зона требует явным DoD. Проверка
+    # идёт самим Node: у 26-го есть fetch, и лишнего curl в образ ради неё класть не нужно.
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "node",
+          "-e",
+          "fetch('http://localhost:3001/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))",
+        ]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+
+volumes:
+  postgres-data:

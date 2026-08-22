@@ -1,0 +1,6 @@
+{
+  "name": "@minical/contracts",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Ручной TypeSpec-источник HTTP-контракта MiniCal и generated OpenAPI"
+}

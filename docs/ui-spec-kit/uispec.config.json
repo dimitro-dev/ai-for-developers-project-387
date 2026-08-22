@@ -1,0 +1,25 @@
+{
+  "version": "0.1",
+  "sourceRoot": "specs/ui",
+  "screens": "specs/ui/screens",
+  "components": "specs/ui/components",
+  "tokens": "specs/ui/tokens",
+  "registry": "specs/ui/registry/components.registry.xml",
+  "apiBindings": "specs/ui/bindings/api-bindings.xml",
+  "navigation": "specs/ui/navigation/navigation.uispec.xml",
+  "contractGaps": "specs/ui/bindings/contract-gaps.xml",
+  "openapi": "../../packages/contracts/generated/openapi.yaml",
+  "targets": {
+    "reactNative": {
+      "language": "typescript",
+      "platform": "android",
+      "unit": "dp"
+    },
+    "typescript": {
+      "strict": true
+    },
+    "typeSpec": {
+      "mode": "models-and-references"
+    }
+  }
+}

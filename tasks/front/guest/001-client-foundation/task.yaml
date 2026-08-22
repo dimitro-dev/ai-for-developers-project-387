@@ -1,0 +1,33 @@
+id: front/guest/001
+slug: client-foundation
+title: Клиентский фундамент гостевой ветки
+track: full
+legacyId: front-guest-001
+depends:
+  - front/ui/002
+  - infra/004
+  - infra/005
+queue:
+  after:
+    - front/ui/002
+  rationale: "Клиентский фундамент: дизайн-система по registry, SDK, guest-flow state, тестовая инфраструктура"
+gates:
+  brief:
+    status: согласовано
+    approvedAt: 2026-08-12
+    sha256: 2170ecef27091df974f03f75d2a97be1fc76787195bad16e73d4ea7dbf9226db
+  adr:
+    status: согласовано
+    approvedAt: 2026-08-12
+    sha256: 1c2688a060f23c2466da09c61104d04a5501f823d9e6e5b32f96c5c94b19eacd
+  plan:
+    status: согласовано
+    approvedAt: 2026-08-12
+    sha256: 2160f38507923ca2661433ebb0e32497539bf8ba924cd56ddbed6e109b9125ed
+  result:
+    status: согласовано
+    approvedAt: 2026-08-13
+    sha256: 921b3f9384c852fb2e6a27275bb4b6ce522ae5d3b92cca4138161ded7fb85a39
+meta:
+  rev: 1
+  selfHash: 68fd3b7c301dfd033a1eb94d770fa77abc6a8aaa7a7f218f45ce9f44dfc2f552

@@ -1,0 +1,29 @@
+id: infra/003
+slug: http-security
+title: Backend HTTP Security Middleware
+track: full
+legacyId:
+  - infra-003
+  - INFRA-001
+depends:
+  - back/001
+queue:
+  after:
+    - back/001
+  rationale: CORS, security-заголовки, лимит тела — условие соединения web-клиента с реальным API
+gates:
+  brief:
+    status: согласовано
+    sha256: d8e17d012ccb7fcdb6fe32c004be1331f72b76e2b159d73367b285cc3168a3ee
+  adr:
+    status: согласовано
+    sha256: 93a7a981b96371ae7faea1ceeeebf7b3233ea543b469ab2701244ec636e76031
+  plan:
+    status: согласовано
+    sha256: 80693f0c86af97de345f3380fb70100114b3d08930d63d110de7c3926d06ff4a
+  result:
+    status: согласовано
+    sha256: c7d030975ae545a658006de9e4cf2ae29fcf7fa5f5f774d99ed03328847d92e1
+meta:
+  rev: 1
+  selfHash: 05e55267fbf563a3f81166570800cf7988a768cb00f0ed18bec29c14b645f35d

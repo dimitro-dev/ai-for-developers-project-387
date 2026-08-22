@@ -1,0 +1,16 @@
+{
+  "name": "@minical/database",
+  "version": "0.1.0",
+  "private": true,
+  "description": "PostgreSQL-схема MiniCal: SQL-миграции и раннер их применения",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "dependencies": {
+    "pg": "^8.23.0"
+  },
+  "devDependencies": {
+    "@types/pg": "^8.23.1"
+  }
+}

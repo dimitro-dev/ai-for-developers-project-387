@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Реестр расхождений UISpec ↔ HTTP-контракт (AUDIT.md, раздел 5; механизм предписан MANUAL §8).
+
+  Как пользоваться:
+  - данных нет в контракте в принципе → запись здесь; данные есть в другой форме → правится спек;
+  - в *.screen.md затронутое место помечается атрибутом gap="GAP-XXX" и маркером
+    TODO-CONTRACT-GAP(GAP-XXX) в разделе UX rules;
+  - в api-bindings.xml допускается <Binding action="..." gap="GAP-XXX" /> вместо operation=
+    (или operation + gap, когда операция есть, но используется как workaround);
+  - статусы: open → accepted | rejected → resolved.
+
+  Контракт менять из реестра нельзя: решение принимает пользователь, реализует Contract Agent
+  по docs/contract-pipeline.md.
+-->
+<ContractGaps version="0.1">
+  <Gap id="GAP-001" status="resolved" severity="high" blocking="true" screens="owner.upcoming-meetings" decided="2026-08-05">
+    <Missing>Публичный URL гостевого календаря: в контракте нет ни поля, ни публичного base URL, поэтому action shareCalendar (экран 05) нечего передать в native.share.</Missing>
+    <Workaround>Не нужен: поле publicUrl есть в контракте (CalendarSettingsResponse.publicUrl), действие shareCalendar генерируется как обычно.</Workaround>
+    <Proposal>Поле publicUrl: url в CalendarSettingsResponse; значение backend берёт из env деплоя (PUBLIC_WEB_URL). Решение AUDIT.md 8.4.</Proposal>
+    <Task>R5 выполнен 2026-08-05 (ROADMAP.md)</Task>
+  </Gap>
+  <Gap id="GAP-002" status="resolved" severity="low" blocking="false" screens="owner.upcoming-meetings,owner.booking-details,guest.booking-confirmation" decided="2026-08-08">
+    <Missing>Название типа события в ответах с бронью: контракт отдавал только eventTypeId — и в getAdminUpcomingBookings (карточка встречи и sheet деталей показывают название), и в createPublicBooking (экран подтверждения гостя держал eventTypeName property состояния, приходящую из навигации).</Missing>
+    <Workaround>Не нужен: поле есть в контракте (Booking.eventTypeName — snapshot названия на момент бронирования, обязательное, отдаётся обеими booking-операциями). Обходов в спеках не осталось: client-side join и запрос словаря типов событий на экранах 05 и 11 снял task-front-ui-003, property состояния на экране 15 — task-front-ui-002.</Workaround>
+    <Proposal>Enrichment ответа bookings названием типа события (например eventTypeName), чтобы убрать второй запрос ради подписи.</Proposal>
+    <Task>task-contract-001 (FR2)</Task>
+  </Gap>
+  <Gap id="GAP-003" status="open" severity="low" blocking="false" screens="owner.profile-settings">
+    <Missing>Частичное обновление настроек: контракт поддерживает только PUT /admin/settings = full replace, а экран 09 правит два поля из четырёх.</Missing>
+    <Workaround>Read-modify-write на клиенте: getAdminSettings → merge правок → полный SetupRequest в updateAdminSettings.</Workaround>
+    <Proposal>Опциональный PATCH /admin/settings для partial update.</Proposal>
+    <Task>не назначена — workaround полноценный</Task>
+  </Gap>
+  <Gap id="GAP-004" status="open" severity="low" blocking="false" screens="guest.booking-form">
+    <Missing>По-полевая привязка серверной ошибки валидации: ErrorResponse {code, message} не сообщает, какое поле отвергнуто. GUEST_NAME_REQUIRED/GUEST_EMAIL_REQUIRED через HTTP недостижимы — generated Zod-схема отклоняет пустые значения раньше как VALIDATION_ERROR, а кода для note нет вовсе.</Missing>
+    <Workaround>Состояние serverValidationError показывает общий текст сервера в InlineAlert variant="error" над формой, без подсветки поля; введённые данные сохраняются. Подсветка полей остаётся за клиентской валидацией на submit.</Workaround>
+    <Proposal>Массив details: [{field, code}] в ValidationError — чтобы серверную ошибку можно было связать с полем формы.</Proposal>
+    <Task>не назначена — non-goal task-contract-001</Task>
+  </Gap>
+</ContractGaps>

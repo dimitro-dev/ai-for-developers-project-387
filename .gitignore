@@ -1,0 +1,32 @@
+# Локальные файлы харнессов (tasks/ в git с 2026-08-16, docs/ — с 2026-08-18, задача process/003)
+/CLAUDE.md
+/.claude/
+.opencode
+
+# Локальная конфигурация MCP-серверов (канон — .mcp.json, зеркало для OpenCode — opencode.json)
+/.mcp.json
+/opencode.json
+/opencode.jsonc
+
+# OS
+.DS_Store
+
+# Dependencies
+node_modules/
+
+# Builds
+dist/
+build/
+coverage/
+
+# Expo / React Native (continuous native generation)
+.expo/
+apps/client/android/
+apps/client/ios/
+*.tsbuildinfo
+
+# Logs and env
+*.log
+.env
+.env.*
+!.env.example

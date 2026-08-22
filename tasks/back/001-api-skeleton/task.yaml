@@ -1,0 +1,32 @@
+id: back/001
+slug: api-skeleton
+title: Каркас backend и реализация контракта на in-memory хранилище
+track: full
+legacyId: back-001
+depends:
+  - infra/005
+  - contract/001
+queue:
+  after:
+    - contract/001
+  parallel:
+    - front/ui/002
+    - front/guest/001
+    - front/guest/002
+  rationale: Каркас API по итоговому контракту 0.2.0; разблокировал infra/003 и сквозную проверку
+gates:
+  brief:
+    status: согласовано
+    sha256: 3a3cc0ad649657cbf69f5f0af2781e66d050dcdfc126ea23c4588d7276667f12
+  adr:
+    status: согласовано
+    sha256: 98c0866bd485f7baf607277f204c04f025e21e1236a87181f373567bfd49e779
+  plan:
+    status: согласовано
+    sha256: 42828403f75bf8106f008a1610510d12e79c66df7d33d981f2b419ddd5dd5c58
+  result:
+    status: согласовано
+    sha256: 83ae2cdde10a53ad98e78899f8c3e3e133e9364e7872d822724633a46cffa589
+meta:
+  rev: 1
+  selfHash: 933ca05510c685144c5ef528002e8203025276526b41857e338389ac6ec125d5

@@ -1,0 +1,56 @@
+name: ci
+
+on:
+  pull_request:
+    branches: [master]
+  push:
+    branches: [master]
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      # Перечня проверок здесь нет намеренно: он определён единственный раз — рецептом
+      # цели `gates` в корневом Makefile, и локальная фаза «Проверка» гоняет то же самое.
+      - run: make gates
+
+  # Ловит дрейф compose.yml и init-скрипта, и он же — обязательная площадка БД-тестов: без
+  # `TEST_DATABASE_URL` те скипаются сами (решение Р8 ADR back/002), и это единственное место,
+  # где контур поднят и они гоняются по-настоящему на каждый PR. Идёт параллельно checks:
+  # критический путь проверок не удлиняется. Docker на GitHub-hosted Linux-раннерах
+  # предустановлен, ставить нечего; Node и зависимости нужны — на них работает `db-test`.
+  # Два запроса psql ниже — утверждения самой проверки, а не проектные команды.
+  compose:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      - name: Валидация конфигурации без .env
+        run: make -C infra config
+      - name: Поднять контур и дождаться healthy
+        run: make -C infra up
+      - name: Проверить базу разработки
+        run: docker compose -f infra/compose.yml exec -T postgres psql -U minical -d minical -c 'select 1;'
+      - name: Проверить тестовую базу
+        run: docker compose -f infra/compose.yml exec -T postgres psql -U minical -d minical_test -c 'select 1;'
+      - name: Прогнать БД-тесты против контура
+        run: make db-test
+      - name: Остановить контур и удалить volume
+        if: always()
+        run: make -C infra reset

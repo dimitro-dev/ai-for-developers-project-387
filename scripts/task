@@ -1,0 +1,4 @@
+#!/bin/sh
+# Вход к CLI задач. Грамматику команд знает только tasks/tools/task.ts — сюда аргументы
+# передаются как есть, без разбора: Makefile посредником между агентом и CLI не является.
+exec node --experimental-strip-types "$(dirname "$0")/../tasks/tools/task.ts" "$@"

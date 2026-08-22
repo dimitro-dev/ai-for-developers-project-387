@@ -1,0 +1,23 @@
+id: infra/002
+slug: android-builder
+title: "Android builder: Docker-образ для сборки APK"
+track: full
+legacyId:
+  - infra-002
+  - "005"
+queue:
+  after:
+    - front/owner/001
+  rationale: Сборка APK в Docker; приоритет низкий — Android проверяется expo run:android на хосте; начинать со спайка QEMU
+gates:
+  brief:
+    status: черновик
+  adr:
+    status: черновик
+  plan:
+    status: черновик
+  result:
+    status: черновик
+meta:
+  rev: 1
+  selfHash: 47a14dd970ec9ca1b62640f95560b3885b35fa546c49c40328c8ec3406022b6e

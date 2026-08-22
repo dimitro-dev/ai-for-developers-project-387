@@ -1,0 +1,27 @@
+{
+  "name": "minical",
+  "version": "0.3.0",
+  "private": true,
+  "engines": {
+    "node": ">=24"
+  },
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "//": "Секция scripts очищена задачей process/003: строка команды определена один раз — рецептом цели в Makefile. Единственное исключение — test: это вход непрозрачного авточекера Hexlet, поэтому он делегирован цели make test и удалён быть не может.",
+  "scripts": {
+    "test": "make test"
+  },
+  "devDependencies": {
+    "@hey-api/openapi-ts": "^0.99.0",
+    "@stoplight/prism-cli": "^5.16.0",
+    "@types/node": "^26.1.2",
+    "@typespec/compiler": "^1.14.0",
+    "@typespec/http": "^1.14.0",
+    "@typespec/openapi": "^1.14.0",
+    "@typespec/openapi3": "^1.14.0",
+    "typescript": "^5.9.3",
+    "yaml": "^2.9.0"
+  }
+}

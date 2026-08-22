@@ -1,0 +1,45 @@
+{
+  "types": [
+    "contract",
+    "infra",
+    "back",
+    "front/ui",
+    "front/guest",
+    "front/owner",
+    "process"
+  ],
+  "archiveDir": "archive",
+  "templateDir": "_template",
+  "registryFile": "REGISTRY.md",
+  "numberWidth": 3,
+  "statuses": {
+    "draft": "черновик",
+    "approved": "согласовано"
+  },
+  "itemStates": [
+    "в плане",
+    "выполняется",
+    "завершено"
+  ],
+  "tracks": {
+    "full": {
+      "gates": [
+        { "name": "brief", "file": "brief.md" },
+        { "name": "adr", "file": "adr.md" },
+        { "name": "plan", "file": "plan.md", "hash": "ignore-state-column" },
+        { "name": "result", "file": "result.md" }
+      ],
+      "items": { "file": "plan.md" }
+    },
+    "lite": {
+      "gates": [
+        { "name": "setup", "file": "task.md", "hash": "until:## Чеклист" },
+        { "name": "result", "file": "task.md" }
+      ],
+      "items": { "file": "task.md", "section": "## Чеклист" }
+    }
+  },
+  "legacyNotes": [
+    { "id": "front-001", "note": "декомпозирована 2026-08-12 на front/ui/001 и линейку front/guest; FR и acceptance criteria распределены по их brief" }
+  ]
+}

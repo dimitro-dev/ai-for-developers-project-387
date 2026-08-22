@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<DesignTokens version="0.1">
+  <Motion id="motion.fast" duration="120" easing="ease-out" />
+  <Motion id="motion.standard" duration="220" easing="ease-in-out" />
+  <Motion id="motion.sheet.enter" duration="280" easing="spring-soft" />
+  <Motion id="motion.setupCheck" duration="1600" easing="linear" repeat="infinite" reduceMotion="static-progress" />
+</DesignTokens>

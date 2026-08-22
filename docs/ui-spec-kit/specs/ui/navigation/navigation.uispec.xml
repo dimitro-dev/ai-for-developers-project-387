@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<NavigationSpec version="0.1">
+  <Root initial="SetupCheck">
+    <Route id="SetupCheck" screen="owner.setup-check" presentation="screen" />
+    <Stack id="OnboardingStack">
+      <Route id="OnboardingProfile" screen="owner.onboarding-profile" presentation="screen" />
+      <Route id="OnboardingWorkingHours" screen="owner.onboarding-working-hours" presentation="screen" />
+    </Stack>
+    <Tabs id="OwnerTabs">
+      <Tab id="MeetingsTab" label="Встречи" icon="calendar">
+        <Route id="OwnerMeetings" screen="owner.upcoming-meetings" presentation="screen" />
+        <Route id="EventTypes" screen="owner.event-types" presentation="screen" />
+        <Route id="CreateEventType" screen="owner.create-event-type" presentation="screen" />
+      </Tab>
+      <Tab id="SettingsTab" label="Настройки" icon="settings">
+        <Route id="OwnerSettings" screen="owner.settings" presentation="screen" />
+        <Route id="OwnerProfileSettings" screen="owner.profile-settings" presentation="screen" />
+        <Route id="OwnerWorkingHoursSettings" screen="owner.working-hours-settings" presentation="screen" />
+        <Route id="EventTypesFromSettings" screen="owner.event-types" presentation="screen" />
+      </Tab>
+    </Tabs>
+    <Stack id="GuestStack">
+      <Route id="GuestEventTypes" screen="guest.event-types" presentation="screen" />
+      <Route id="GuestSlots" screen="guest.slots" presentation="screen">
+        <Param name="eventTypeId" type="string" required="true" />
+        <Param name="eventTypeName" type="string" required="true" />
+        <Param name="durationMinutes" type="int32" required="true" />
+        <Param name="eventTypeDescription" type="string" required="false" />
+      </Route>
+      <Route id="GuestBookingForm" screen="guest.booking-form" presentation="screen">
+        <Param name="eventTypeId" type="string" required="true" />
+        <Param name="eventTypeName" type="string" required="true" />
+        <Param name="startAtUtc" type="utcDateTime" required="true" />
+        <Param name="endAtUtc" type="utcDateTime" required="true" />
+      </Route>
+      <Route id="GuestBookingConfirmation" screen="guest.booking-confirmation" presentation="screen">
+        <Param name="booking" type="Booking" required="true" />
+      </Route>
+    </Stack>
+  </Root>
+</NavigationSpec>

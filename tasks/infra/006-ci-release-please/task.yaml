@@ -1,0 +1,29 @@
+id: infra/006
+slug: ci-release-please
+title: "CI: обязательные проверки и release-please на GitHub Actions"
+track: full
+legacyId: infra-006
+queue:
+  after:
+    - infra/002
+  rationale: CI + release-please; выполнена параллельно front/guest/002, первый релиз v0.2.0
+gates:
+  brief:
+    status: согласовано
+    approvedAt: 2026-08-15
+    sha256: 0f4cfe3aece795ecc231878093ba66564fd7ddd61683846a4fcc84cb3eedd8dd
+  adr:
+    status: согласовано
+    approvedAt: 2026-08-15
+    sha256: 9bfa31653ce3cae4ce9759cf2bc63b2908b436d8370b44f43ecd8c676a673482
+  plan:
+    status: согласовано
+    approvedAt: 2026-08-15
+    sha256: b29c1ec1ef5d686efbfef1fd3d16c8fd1ee123ca00a438e2f4f92cf0ae616fec
+  result:
+    status: согласовано
+    approvedAt: 2026-08-15
+    sha256: e974c2fa17fbad5962fdc85bf252c204966040afc177ad88ee603380051b824d
+meta:
+  rev: 1
+  selfHash: a1c4c66a03bce1c3d8eee0e220adc93a8fad8d04445224d2ffe9f244963e93c6
