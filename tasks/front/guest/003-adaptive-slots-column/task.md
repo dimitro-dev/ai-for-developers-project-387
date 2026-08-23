@@ -55,7 +55,7 @@ alignSelf: 'center'`**. Проценты поддерживаются и react-n
 
 | ID | Цель / проблема | Решение | Состояние |
 |---|---|---|---|
-| P01 | `BoxProps.width` не принимает проценты | `box.ts`: тип `'fill' \| number \| \`${number}%\``, `boxStyle()` пробрасывает строку в `width`. Unit-тест `box.test.ts`: `'100%'` попадает в стиль, `'fill'` даёт `alignSelf: 'stretch'`, число — фиксированную ширину | в плане |
+| P01 | `BoxProps.width` не принимает проценты | `box.ts`: тип `'fill' \| number \| \`${number}%\``, `boxStyle()` пробрасывает строку в `width`. Unit-тест `box.test.ts`: `'100%'` попадает в стиль, `'fill'` даёт `alignSelf: 'stretch'`, число — фиксированную ширину | завершено |
 | P02 | Экран слотов: колонка 712 px на окнах < ~760 | `GuestSlotsView.tsx`: `width="100%"` на контентной колонке. Регресс в `GuestSlots.test.tsx`: у колонки контента стили `width: '100%'`, `maxWidth: CONTENT_MAX_WIDTH`, `alignSelf: 'center'` | в плане |
 | P03 | Каталог: тот же латентный паттерн | `GuestEventTypesView.tsx`: `width="100%"`. Регресс в `EventTypes.test.tsx` на те же стили колонки | в плане |
 | P04 | Проверки платформ и гейтов | `make -C apps/client gates`; визуально web локально на 360/600/900 (каталог, слоты: лента скроллится внутри окна, сетка слотов не обрезается); Android — экран слотов на узком устройстве/эмуляторе; перед `result` — полный `make gates` | в плане |
