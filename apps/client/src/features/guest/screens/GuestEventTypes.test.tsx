@@ -1,9 +1,9 @@
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react-native';
 
+import { CONTENT_MAX_WIDTH } from '@/design-system/layout/adaptive';
 import type { CalendarView, EventTypeView } from '@/features/guest/model/types';
 import { GuestEventTypesScreen } from '@/features/guest/screens/GuestEventTypesScreen';
-import { CONTENT_MAX_WIDTH } from '@/design-system/layout/adaptive';
 import type { GuestStackParamList } from '@/navigation/GuestStackParamList';
 
 // Экран проверяется через мок use-cases: ветви ошибок Prism не отдаёт, а сеть в тестах не нужна.
@@ -77,9 +77,7 @@ describe('GuestEventTypesScreen — состояния', () => {
 
     await waitFor(() => expect(screen.getByTestId('catalog-title')).toBeTruthy());
 
-    const column = screen.getByTestId('catalog-content-column');
-    const styles = Array.isArray(column.props.style) ? column.props.style.flat() : [column.props.style];
-    expect(styles).toEqual(
+    expect(screen.getByTestId('catalog-content-column').props.style).toEqual(
       expect.arrayContaining([
         expect.objectContaining({
           width: '100%',
