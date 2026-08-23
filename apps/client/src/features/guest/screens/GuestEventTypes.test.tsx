@@ -1,6 +1,7 @@
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react-native';
 
+import { CONTENT_MAX_WIDTH } from '@/design-system/layout/adaptive';
 import type { CalendarView, EventTypeView } from '@/features/guest/model/types';
 import { GuestEventTypesScreen } from '@/features/guest/screens/GuestEventTypesScreen';
 import type { GuestStackParamList } from '@/navigation/GuestStackParamList';
@@ -66,6 +67,25 @@ describe('GuestEventTypesScreen — состояния', () => {
     expect(screen.getByText('Запланировать встречу с Дмитрием')).toBeTruthy();
     expect(screen.getByTestId('event-type-card-consultation')).toBeTruthy();
     expect(screen.getByTestId('event-type-card-product-review')).toBeTruthy();
+  });
+
+  it('content: колонка контента ограничивает ширину, а не полагается на fit-content', async () => {
+    mockedCalendar.mockResolvedValue({ ok: true, data: calendar });
+    mockedEventTypes.mockResolvedValue({ ok: true, data: eventTypes });
+
+    await renderScreen();
+
+    await waitFor(() => expect(screen.getByTestId('catalog-title')).toBeTruthy());
+
+    expect(screen.getByTestId('catalog-content-column').props.style).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          width: '100%',
+          maxWidth: CONTENT_MAX_WIDTH,
+          alignSelf: 'center',
+        }),
+      ]),
+    );
   });
 
   it('empty: пустой список выглядит как ненастроенный календарь', async () => {

@@ -12,8 +12,11 @@ export interface BoxProps {
   paddingTop?: number;
   paddingBottom?: number;
   flex?: number;
-  /** `width="fill"` спеки → `alignSelf: 'stretch'`; число — фиксированная ширина в dp. */
-  width?: number | 'fill';
+  /**
+   * `width="fill"` спеки → `alignSelf: 'stretch'`; число — фиксированная ширина в dp;
+   * процентная строка (`'100%'`) — процентная ширина от родителя.
+   */
+  width?: 'fill' | number | `${number}%`;
   height?: number;
   /** Ограничение ширины контента правилом раскладки (`CONTENT_MAX_WIDTH`). */
   maxWidth?: number;
@@ -39,7 +42,7 @@ export function boxStyle(props: BoxProps): ViewStyle {
     paddingTop: props.paddingTop,
     paddingBottom: props.paddingBottom,
     flex: props.flex,
-    width: typeof width === 'number' ? width : undefined,
+    width: width === 'fill' ? undefined : width,
     alignSelf: props.alignSelf ?? (width === 'fill' ? 'stretch' : undefined),
     maxWidth: props.maxWidth,
     flexWrap: props.wrap === true ? 'wrap' : undefined,
