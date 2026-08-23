@@ -3,6 +3,7 @@ import { fireEvent, render, screen, waitFor } from '@testing-library/react-nativ
 
 import type { CalendarView, EventTypeView } from '@/features/guest/model/types';
 import { GuestEventTypesScreen } from '@/features/guest/screens/GuestEventTypesScreen';
+import { CONTENT_MAX_WIDTH } from '@/design-system/layout/adaptive';
 import type { GuestStackParamList } from '@/navigation/GuestStackParamList';
 
 // Экран проверяется через мок use-cases: ветви ошибок Prism не отдаёт, а сеть в тестах не нужна.
@@ -66,6 +67,27 @@ describe('GuestEventTypesScreen — состояния', () => {
     expect(screen.getByText('Запланировать встречу с Дмитрием')).toBeTruthy();
     expect(screen.getByTestId('event-type-card-consultation')).toBeTruthy();
     expect(screen.getByTestId('event-type-card-product-review')).toBeTruthy();
+  });
+
+  it('content: колонка контента ограничивает ширину, а не полагается на fit-content', async () => {
+    mockedCalendar.mockResolvedValue({ ok: true, data: calendar });
+    mockedEventTypes.mockResolvedValue({ ok: true, data: eventTypes });
+
+    await renderScreen();
+
+    await waitFor(() => expect(screen.getByTestId('catalog-title')).toBeTruthy());
+
+    const column = screen.getByTestId('catalog-content-column');
+    const styles = Array.isArray(column.props.style) ? column.props.style.flat() : [column.props.style];
+    expect(styles).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          width: '100%',
+          maxWidth: CONTENT_MAX_WIDTH,
+          alignSelf: 'center',
+        }),
+      ]),
+    );
   });
 
   it('empty: пустой список выглядит как ненастроенный календарь', async () => {

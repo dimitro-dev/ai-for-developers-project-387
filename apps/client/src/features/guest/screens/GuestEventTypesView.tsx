@@ -62,8 +62,15 @@ export function GuestEventTypesView({
             contentPaddingTop={spacing[24]}
             contentPaddingBottom={spacing[32]}
           >
-            {/* Адаптив — правило раскладки: контент ограничен по ширине и центрируется. */}
-            <Column width="fill" maxWidth={CONTENT_MAX_WIDTH} alignSelf="center">
+            {/* Адаптив — правило раскладки: контент ограничен по ширине и центрируется.
+                Процент вместо fill: fit-content при center игнорирует ширину родителя
+                (тот же механизм, что у экрана слотов). */}
+            <Column
+              width="100%"
+              maxWidth={CONTENT_MAX_WIDTH}
+              alignSelf="center"
+              testID="catalog-content-column"
+            >
               <AppText typography={typography.title.small} color={colors.text.secondary}>
                 Calendar
               </AppText>
