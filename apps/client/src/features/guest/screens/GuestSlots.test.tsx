@@ -1,6 +1,7 @@
 import { act, fireEvent, render, screen } from '@testing-library/react-native';
 
 import type { AppError } from '@/api/errors';
+import { CONTENT_MAX_WIDTH } from '@/design-system/layout/adaptive';
 import type { SlotView } from '@/features/guest/model/types';
 import { GuestSlotsScreen } from '@/features/guest/screens/GuestSlotsScreen';
 import { slotColumns } from '@/features/guest/screens/GuestSlotsView';
@@ -258,6 +259,26 @@ describe('slotColumns — правило раскладки сетки', () => {
     expect(slotColumns(768)).toBeGreaterThan(2);
     // Контент шире 760 dp не растёт, поэтому и колонок больше не становится.
     expect(slotColumns(1440)).toBe(slotColumns(760));
+  });
+});
+
+describe('GuestSlotsScreen — ширина контентной колонки (регресс web)', () => {
+  // Регресс: fill давал на web fit-content-центрирование, игнорирующее ширину
+  // родителя, — колонка переполняла окно уже ~760px. Процентная ширина это чинит.
+  it('колонка контента занимает 100% родителя с maxWidth и центрированием', async () => {
+    loadPublicSlotsMock.mockReturnValue(ok([NINE]));
+    await renderScreen();
+    await focusScreen();
+
+    expect(screen.getByTestId('slots-content-column').props.style).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          width: '100%',
+          maxWidth: CONTENT_MAX_WIDTH,
+          alignSelf: 'center',
+        }),
+      ]),
+    );
   });
 });
 

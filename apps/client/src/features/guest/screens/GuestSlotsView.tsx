@@ -90,8 +90,15 @@ export function GuestSlotsView({
             contentPaddingHorizontal={CONTENT_PADDING}
             contentPaddingBottom={spacing[32]}
           >
-            {/* Правило раскладки: контент ограничен по ширине и центрируется (ADR §10). */}
-            <Column width="fill" maxWidth={CONTENT_MAX_WIDTH} alignSelf="center">
+            {/* Правило раскладки: контент ограничен по ширине и центрируется (ADR §10).
+                Процент вместо fill: на web fit-content-центрирование игнорирует ширину
+                родителя, и колонка переполняет окно уже ~760px. */}
+            <Column
+              width="100%"
+              maxWidth={CONTENT_MAX_WIDTH}
+              alignSelf="center"
+              testID="slots-content-column"
+            >
               <Row align="center" gap={spacing[8]}>
                 <AppIcon
                   name="event-type"
