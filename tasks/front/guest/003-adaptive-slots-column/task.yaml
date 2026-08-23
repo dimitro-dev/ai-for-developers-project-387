@@ -1,0 +1,16 @@
+id: front/guest/003
+slug: adaptive-slots-column
+title: Адаптивная ширина контента гостевых экранов каталога и слотов
+track: lite
+gates:
+  setup:
+    status: согласовано
+    approvedAt: 2026-08-23
+    sha256: d9c2d254c02bcdfabe343d1f9396af3bd60bd87da80f79ac0451f72cc0554632
+  result:
+    status: черновик
+workspace:
+  branch: chore/front-guest-003
+meta:
+  rev: 3
+  selfHash: ce6f22ebec68755bc53152af4cb9af07515a2f8af4c15ad845aff568b62f3184

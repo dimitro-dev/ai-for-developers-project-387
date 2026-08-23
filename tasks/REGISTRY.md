@@ -46,6 +46,7 @@
 |---|---|---|---|
 | [front/guest/001](front/guest/001-client-foundation/) | Клиентский фундамент гостевой ветки | [front/ui/002](front/ui/002-guest-uispec-rebuild/), [infra/004](infra/004-contract-mock-prism/), [infra/005](infra/005-generated-entrypoints/) | завершена (11/11) |
 | [front/guest/002](front/guest/002-guest-screens/) | Гостевой сценарий: четыре экрана и сквозная проверка | [front/ui/002](front/ui/002-guest-uispec-rebuild/), [front/guest/001](front/guest/001-client-foundation/), [infra/004](infra/004-contract-mock-prism/), [back/001](back/001-api-skeleton/), [infra/003](infra/003-http-security/) | завершена (15/15) |
+| [front/guest/003](front/guest/003-adaptive-slots-column/) | Адаптивная ширина контента гостевых экранов каталога и слотов | — | постановка (0/4) |
 
 ### front/owner
 
