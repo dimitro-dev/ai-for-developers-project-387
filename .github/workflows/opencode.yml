@@ -36,7 +36,7 @@ jobs:
         env:
           OPENCODE_API_KEY: ${{ secrets.OPENCODE_API_KEY }}
         with:
-          model: opencode/deepseek-v4-flash-free
+          model: opencode/nemotron-3.5-lightning-free
           # Вход `share` по умолчанию `true` для публичных репозиториев: транскрипт
           # сессии публиковался бы по share-ссылке. Публикация выбирается явно.
           share: false
@@ -63,7 +63,7 @@ jobs:
         env:
           OPENCODE_API_KEY: ${{ secrets.OPENCODE_API_KEY }}
         with:
-          model: opencode/deepseek-v4-flash-free
+          model: opencode/nemotron-3.5-lightning-free
           share: false
           prompt: |
             Сделай ревью этого pull request на русском языке: корректность,
