@@ -164,8 +164,38 @@ jobs:
 | P01 | Ни App, ни ключа провайдера у репозитория нет | Владелец ставит GitHub App `opencode-agent` на `dimitro-dev/ai-for-developers-project-387` (браузерный шаг, API для установки App нет) и вводит ключ OpenCode Zen; ключ кладётся в секрет `OPENCODE_API_KEY` через `gh secret set` — в транскрипт сессии он не попадает. Проверка: `gh secret list` показывает `OPENCODE_API_KEY` | завершено |
 | P02 | Агент не вызывается из GitHub | `.github/workflows/opencode.yml` по решению выше: job `comment` на `issue_comment` и `pull_request_review_comment`, job `review` на `pull_request` с отсевом draft и форков. `hexlet-check.yml` не затрагивается | завершено |
 | P03 | Дерево репозитория в `docs/architecture.md` не знает про новый workflow | Строка про `opencode.yml` в блоке `.github/workflows/` рядом с `ci.yml` и `release-please.yml` | завершено |
-| P04 | Авто-ревью и обмен OIDC на событии `pull_request` не проверены | PR с P02–P03 открывается не-draft и служит проверкой самому себе: job `review` обязан стартовать на нём. `gh run view` — job зелёный, комментарий агента в PR. При отказе OIDC — откат на `use_github_token: true` в этом job'е, зафиксировать в результате | выполняется |
+| P04 | Авто-ревью и обмен OIDC на событии `pull_request` не проверены | PR с P02–P03 открывается не-draft и служит проверкой самому себе: job `review` обязан стартовать на нём. `gh run view` — job зелёный, комментарий агента в PR. При отказе OIDC — откат на `use_github_token: true` в этом job'е, зафиксировать в результате | завершено |
 | P05 | Комментарийный триггер не проверен; до merge он не работает в принципе | После merge PR в `master`: `gh issue create` — публичный тестовый issue с нейтральным текстом про сам эксперимент; `gh issue comment` с `/oc explain this issue`; `gh run list --workflow=opencode.yml` и `gh run view --log`; `gh issue view --comments` — ответ агента от имени App. Это приёмка задания | в плане |
 | P06 | Гейты | `make -C infra gates` (зона своих проверок не имеет) и полный `make gates` из корня перед `task approve infra/010 result`; из корневого набора новый файл задевает только `lint-docs` | в плане |
 
 ## Результат и проверки
+
+Работа не закрыта: P05 требует merge в `master` (до него `issue_comment` не видит workflow),
+P06 — финального прогона гейтов. Ниже — проверенное на PR #3.
+
+### Выполненные проверки
+
+- **Гейтинг событий** (прогон 33304903876 и наблюдение за двумя предыдущими): job `comment`
+  на событии `pull_request` пропускается, job `review` отрабатывает. Push в ветку
+  (`synchronize`) и перевод PR в черновик (`converted_to_draft`) прогонов не порождают —
+  этих типов нет в подписке; снятие черновика (`ready_for_review`) запускает job.
+  Фильтры draft и форка ведут себя как задумано.
+- **OIDC и права App**: агент ставит и снимает реакцию на PR и публикует комментарий от имени
+  `opencode-agent` — обмен OIDC-токена на installation-токен работает на событии
+  `pull_request`. Откат на `use_github_token: true` не понадобился.
+- **Авто-ревью**: комментарий агента в PR #3 от 2026-08-30T09:48:21Z — разбор всех пяти
+  изменённых файлов, включая замечание про отсутствующий фильтр автора.
+- **Чеки PR**: `review` pass, `comment` skipping, `checks` pass, `compose` pass, `build` pass.
+- **Локально**: `make gates` — exit 0.
+
+### Стоимость ошибки с моделью
+
+Два прогона потрачены на неверный `model:` (33304637048, 33304798050); оба оставили в PR
+комментарий агента с текстом ошибки. Комментарии информативны и удалены не были — решение
+владельца. Правило выбора модели зафиксировано в «Решении».
+
+### Открытые пункты
+
+- Гейт `setup` возвращён в черновик правкой строки `model:` и ждёт повторного согласования.
+- P05: после merge — тестовый issue и `/oc explain this issue`.
+- P06: полный `make gates` перед `task approve infra/010 result`.
