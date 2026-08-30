@@ -18,6 +18,7 @@ node_modules/
 dist/
 build/
 coverage/
+.lighthouseci/
 
 # Expo / React Native (continuous native generation)
 .expo/

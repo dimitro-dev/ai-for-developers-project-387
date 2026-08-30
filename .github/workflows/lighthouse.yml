@@ -1,0 +1,64 @@
+name: lighthouse
+
+on:
+  schedule:
+    - cron: '0 2 * * *'   # 05:00 MSK — отчёт готов к началу дня
+  workflow_dispatch:
+    inputs:
+      base_url:
+        description: 'Адрес вместо настроенного (пусто — как настроено)'
+        required: false
+        default: ''
+
+concurrency:
+  group: lighthouse
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      LHCI_BASE_URL: ${{ github.event.inputs.base_url || vars.LHCI_BASE_URL || 'http://localhost:3001' }}
+      LOCAL_TARGET: ${{ startsWith(github.event.inputs.base_url || vars.LHCI_BASE_URL || 'http://localhost:3001', 'http://localhost') }}
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+
+      - if: env.LOCAL_TARGET == 'true'
+        run: make -C infra config
+      - if: env.LOCAL_TARGET == 'true'
+        run: make -C infra up-app
+        env:
+          SEED_DEMO: 'true'
+
+      # API стартует в режиме API-only, когда бандлов нет, и healthcheck по /health при этом
+      # зелёный: без этой проверки Lighthouse падал бы дальше невнятной ошибкой про 404.
+      - name: Убедиться, что контур раздаёт web
+        if: env.LOCAL_TARGET == 'true'
+        run: curl -sSf -o /dev/null "$LHCI_BASE_URL"
+
+      - name: Разбудить внешний адрес
+        if: env.LOCAL_TARGET != 'true'
+        run: curl -sSf -o /dev/null --retry 5 --retry-all-errors --retry-delay 10 --max-time 180 "$LHCI_BASE_URL"
+
+      - run: make lighthouse
+      - if: always()
+        run: |
+          echo "Аудит: $LHCI_BASE_URL" >> "$GITHUB_STEP_SUMMARY"
+          make lighthouse-report >> "$GITHUB_STEP_SUMMARY"
+      - if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: lighthouse-${{ github.run_id }}
+          path: .lighthouseci/
+          retention-days: 30
+      - if: always() && env.LOCAL_TARGET == 'true'
+        run: make -C infra reset

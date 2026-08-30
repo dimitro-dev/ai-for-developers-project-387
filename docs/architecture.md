@@ -160,7 +160,8 @@ minical/
 │                              редактируется; ci.yml — обязательные проверки на PR/push
 │                              в `main`; release-please.yml — release-PR;
 │                              opencode.yml — агент OpenCode: /oc в комментариях,
-│                              авто-ревью не-draft PR
+│                              авто-ревью не-draft PR; lighthouse.yml — ночной аудит
+│                              Lighthouse по расписанию и кнопкой
 ├── apps/
 │   ├── api/                   @minical/api — REST API: 12 операций контракта на Express 5,
 │   │   │                       порт 3001; хранилище двухрежимное — in-memory по умолчанию,

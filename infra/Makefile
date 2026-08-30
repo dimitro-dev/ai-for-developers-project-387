@@ -32,6 +32,10 @@ POSTGRES_PORT ?= 5432
 DATABASE_URL ?= postgres://$(POSTGRES_USER):$(POSTGRES_PASSWORD)@localhost:$(POSTGRES_PORT)/$(POSTGRES_DB)
 TEST_DATABASE_URL ?= postgres://$(POSTGRES_USER):$(POSTGRES_PASSWORD)@localhost:$(POSTGRES_PORT)/$(POSTGRES_TEST_DB)
 
+# Версия аудитора прибита здесь: пакета нет в lockfile — он вызывается разово и качается на
+# запуск, — поэтому единственное место, где версия зафиксирована, это строка команды.
+LHCI_VERSION ?= 0.15.1
+
 typecheck: ## Проверять нечего: зона не содержит TypeScript
 	@:
 
@@ -88,4 +92,20 @@ image-run: ## Запустить образ (PORT=3001, PUBLIC_WEB_URL, SEED_DEM
 	  $(if $(SEED_DEMO),-e SEED_DEMO='$(SEED_DEMO)') \
 	  $(IMAGE)
 
-.PHONY: typecheck test gates up up-app down logs reset config db-migrate db-test image-build image-run
+# Аудит идёт по уже поднятому контуру: цель его не поднимает и не гасит — адрес задаётся
+# переменной LHCI_BASE_URL, которую читает lighthouserc.js в корне.
+# Прогон из корня обязателен: конфиг lhci ищет только в текущем каталоге, вверх по дереву не
+# поднимается (`healthcheck` из этой зоны отвечает «Configuration file not found»), и туда же,
+# в текущий каталог, кладёт .lighthouseci/ — путь артефакта в CI и строка .gitignore корневые.
+lighthouse: ## Прогнать Lighthouse по поднятому контуру, отчёт в .lighthouseci/
+	cd $(REPO_ROOT) && npx --yes @lhci/cli@$(LHCI_VERSION) autorun
+
+# Медиана прогона — строка с isRepresentativeRun; остальные запуски того же URL в сводку
+# не попадают.
+lighthouse-report: ## Markdown-сводка последнего прогона в stdout
+	@echo "| URL | Perf | A11y | BP | SEO |"
+	@echo "|---|---|---|---|---|"
+	@jq -r '.[] | select(.isRepresentativeRun) | "| \(.url) | \(.summary.performance*100|round) | \(.summary.accessibility*100|round) | \(.summary["best-practices"]*100|round) | \(.summary.seo*100|round) |"' $(REPO_ROOT)/.lighthouseci/manifest.json
+
+.PHONY: typecheck test gates up up-app down logs reset config db-migrate db-test image-build image-run \
+        lighthouse lighthouse-report

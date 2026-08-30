@@ -1,0 +1,14 @@
+id: infra/013
+slug: lighthouse-nightly
+title: "Ночной аудит Lighthouse: запуск по расписанию и вручную, отчёт в прогоне"
+track: lite
+queue:
+  rationale: "Issue #14. Требование платформы: регулярная задача по расписанию плюс ручной запуск; наполнение — ночной Lighthouse с утренним отчётом. Постановка и решение написаны, ждут согласования гейта setup. Целится в контур, поднятый в самом прогоне (make -C infra up-app + SEED_DEMO=true), а не в DockHost: на счету провайдера кончились средства. Ассерты выключены до накопления базовой линии — Expo Web это SPA, lighthouse:recommended красил бы каждую ночь в красный"
+gates:
+  setup:
+    status: черновик
+  result:
+    status: черновик
+meta:
+  rev: 4
+  selfHash: 687b237e45f8b2e709b6eff7bd0b97783d9d1e00ee2c4d8ea7761acc3a50c0dd
