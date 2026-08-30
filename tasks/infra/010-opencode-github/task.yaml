@@ -4,9 +4,11 @@ title: "OpenCode GitHub App: вызов агента из комментария
 track: lite
 gates:
   setup:
-    status: черновик
+    status: согласовано
+    approvedAt: 2026-08-30
+    sha256: d8a1a397016a31c9afff33dc899b189ef58bab644f2629add75bd11c902009fc
   result:
     status: черновик
 meta:
-  rev: 4
-  selfHash: d4bd564aa0e0ddbb13ca81968afc14e00ba6bc81e76acb1f96a7b5181aea256e
+  rev: 5
+  selfHash: 0ca7128685ef5924f58d931a4db7118b5aefbfb4a2a87288db106fd8642c2bd2
