@@ -1,0 +1,14 @@
+id: infra/012
+slug: command-trigger-precision
+title: "Точность триггера агента: команда только с начала строки"
+track: lite
+queue:
+  rationale: "Issue #10. Условие job'а comment использует contains, то есть подстроку: агента запускает любое упоминание команды в тексте — цитата, обсуждение, путь .github/workflows/opencode.yml внутри которого есть /opencode. За 2026-08-30 сработало дважды: агент ответил сам себе и завёл лишний PR. Фильтр user.type != 'Bot' закрыл только ботов. Регулярок в выражениях Actions нет, поэтому проверка начала строки делается отдельным job'ом detect с grep -qE по телу через env и блоком outputs: для передачи в needs. Это патч точности, а не безопасности: намеренная команда в начале строки всё равно даёт промпт-инъекцию, настоящее закрытие — фильтр по author_association"
+gates:
+  setup:
+    status: черновик
+  result:
+    status: черновик
+meta:
+  rev: 3
+  selfHash: ef7d207410e68ccfc1a739b704c7136d8d27b7ccad57a50bebe46e8ecd4fad4e
