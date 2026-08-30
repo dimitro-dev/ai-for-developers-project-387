@@ -23,7 +23,7 @@
 | [infra/007](infra/007-e2e-native-framework/) | Выбор native e2e-фреймворка: Detox, Maestro или Appium | [infra/002](infra/002-android-builder/), [front/guest/002](front/guest/002-guest-screens/) | заявлена |
 | [infra/008](infra/008-e2e-web-playwright/) | Web e2e на Playwright: сквозной прогон гостевого сценария | [front/guest/002](front/guest/002-guest-screens/), [back/001](back/001-api-skeleton/), [infra/006](infra/006-ci-release-please/) | заявлена |
 | [infra/009](infra/009-docker-deploy/) | Публикация приложения: Docker-образ и деплой | — | завершена (10/10) |
-| [infra/010](infra/010-opencode-github/) | OpenCode GitHub App: вызов агента из комментария и авто-ревью PR | — | постановка (4/6) |
+| [infra/010](infra/010-opencode-github/) | OpenCode GitHub App: вызов агента из комментария и авто-ревью PR | — | результат (6/6) |
 
 ### back
 
