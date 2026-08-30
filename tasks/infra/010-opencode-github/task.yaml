@@ -1,0 +1,12 @@
+id: infra/010
+slug: opencode-github
+title: "OpenCode GitHub App: вызов агента из комментария и авто-ревью PR"
+track: lite
+gates:
+  setup:
+    status: черновик
+  result:
+    status: черновик
+meta:
+  rev: 4
+  selfHash: d4bd564aa0e0ddbb13ca81968afc14e00ba6bc81e76acb1f96a7b5181aea256e
