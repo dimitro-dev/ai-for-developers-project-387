@@ -33,9 +33,15 @@
 поэтому workflow объявляет только `id-token: write` и не получает ни `contents`, ни `issues`.
 
 Провайдер — **OpenCode Zen** (id провайдера `opencode`, секрет `OPENCODE_API_KEY`), модель
-`opencode/grok-code` — бесплатная, с tool-calling и контекстом 256k. Бесплатная модель выбрана
+`opencode/deepseek-v4-flash-free` — бесплатная, с tool-calling. Бесплатная модель выбрана
 осознанно как компенсация отсутствующего фильтра автора (ниже): цена чужого `/oc` — минуты
-Actions, не деньги. Обратная связка обязательна: перевод строки `model:` на платную модель
+Actions, не деньги.
+
+Список моделей Zen берётся только из живого каталога `https://opencode.ai/zen/v1/models`
+(63 модели, из них семь с суффиксом `-free`). Агрегатор models.dev для этого непригоден:
+первая редакция решения назвала по нему `opencode/grok-code`, которой в Zen нет вовсе,
+и прогон 33304637048 упал с `Model not found`. Ошибка стоила одного прогона и зафиксирована
+здесь, чтобы следующая правка `model:` сверялась с каталогом, а не с агрегатором. Обратная связка обязательна: перевод строки `model:` на платную модель
 требует вернуть фильтр по `author_association`, иначе публичный триггер сможет тянуть баланс
 Zen (в аккаунте Zen может быть включено авто-пополнение $20 при остатке ниже $5).
 
@@ -72,7 +78,7 @@ jobs:
         env:
           OPENCODE_API_KEY: ${{ secrets.OPENCODE_API_KEY }}
         with:
-          model: opencode/grok-code
+          model: opencode/deepseek-v4-flash-free
           share: false
 
   review:
@@ -92,7 +98,7 @@ jobs:
         env:
           OPENCODE_API_KEY: ${{ secrets.OPENCODE_API_KEY }}
         with:
-          model: opencode/grok-code
+          model: opencode/deepseek-v4-flash-free
           share: false
           prompt: |
             Сделай ревью этого pull request на русском языке: корректность,
