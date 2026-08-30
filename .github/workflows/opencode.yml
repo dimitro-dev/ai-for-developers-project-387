@@ -14,12 +14,16 @@ on:
 
 jobs:
   # Ручной вызов: `/oc` или `/opencode` в комментарии к issue или к строке кода в PR.
+  # Комментарии ботов отсеиваются: `contains` ищет подстроку, а ответ агента упоминает путь
+  # `.github/workflows/opencode.yml`, внутри которого есть `/opencode`, — без фильтра агент
+  # перезапускает сам себя (наблюдалось на прогоне 33306960256).
   # Фильтра по автору нет намеренно (решение владельца, infra/010): цена чужого запуска
   # ограничена бесплатной моделью. Переход на платную модель обязан вернуть условие
   # `github.event.comment.author_association == 'OWNER'`.
   comment:
     if: |
       github.event_name != 'pull_request' &&
+      github.event.comment.user.type != 'Bot' &&
       (contains(github.event.comment.body, '/oc') ||
        contains(github.event.comment.body, '/opencode'))
     runs-on: ubuntu-latest
@@ -36,7 +40,7 @@ jobs:
         env:
           OPENCODE_API_KEY: ${{ secrets.OPENCODE_API_KEY }}
         with:
-          model: opencode/nemotron-3.5-lightning-free
+          model: opencode/big-pickle
           # Вход `share` по умолчанию `true` для публичных репозиториев: транскрипт
           # сессии публиковался бы по share-ссылке. Публикация выбирается явно.
           share: false
@@ -63,7 +67,7 @@ jobs:
         env:
           OPENCODE_API_KEY: ${{ secrets.OPENCODE_API_KEY }}
         with:
-          model: opencode/nemotron-3.5-lightning-free
+          model: opencode/big-pickle
           share: false
           prompt: |
             Сделай ревью этого pull request на русском языке: корректность,

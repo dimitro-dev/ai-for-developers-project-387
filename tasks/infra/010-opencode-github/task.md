@@ -33,7 +33,7 @@
 поэтому workflow объявляет только `id-token: write` и не получает ни `contents`, ни `issues`.
 
 Провайдер — **OpenCode Zen** (id провайдера `opencode`, секрет `OPENCODE_API_KEY`), модель
-`opencode/nemotron-3.5-lightning-free` — бесплатная, с tool-calling. Бесплатная модель выбрана
+`opencode/big-pickle` — бесплатная, с tool-calling. Бесплатная модель выбрана
 осознанно как компенсация отсутствующего фильтра автора (ниже): цена чужого `/oc` — минуты
 Actions, не деньги.
 
@@ -46,7 +46,15 @@ Actions, не деньги.
 Правило выведено из двух упавших прогонов, оба — `Model not found` на шаге агента:
 33304637048 на `opencode/grok-code` (взят из models.dev, отсутствует в обоих каталогах)
 и 33304798050 на `opencode/deepseek-v4-flash-free` (есть в каталоге Zen, но не в каталоге
-программы). Оба отсеивались проверкой до коммита. Обратная связка обязательна: перевод строки `model:` на платную модель
+программы). Оба отсеивались проверкой до коммита.
+
+Внутри бесплатного набора выбор решает пригодность ответа, а не только наличие в каталогах:
+`nemotron-3.5-lightning-free` дал осмысленный разбор PR (33304903876), но на issue #4
+(33306585603) выдал бессвязный текст — модель нестабильна. `big-pickle` — стелс-модель Zen,
+бесплатная на время сбора обратной связи; её данные, как и у остальных бесплатных, могут
+использоваться для улучшения модели, что для публичного учебного репозитория приемлемо.
+
+Обратная связка обязательна: перевод строки `model:` на платную модель
 требует вернуть фильтр по `author_association`, иначе публичный триггер сможет тянуть баланс
 Zen (в аккаунте Zen может быть включено авто-пополнение $20 при остатке ниже $5).
 
@@ -68,6 +76,7 @@ jobs:
   comment:
     if: |
       github.event_name != 'pull_request' &&
+      github.event.comment.user.type != 'Bot' &&
       (contains(github.event.comment.body, '/oc') ||
        contains(github.event.comment.body, '/opencode'))
     runs-on: ubuntu-latest
@@ -83,7 +92,7 @@ jobs:
         env:
           OPENCODE_API_KEY: ${{ secrets.OPENCODE_API_KEY }}
         with:
-          model: opencode/nemotron-3.5-lightning-free
+          model: opencode/big-pickle
           share: false
 
   review:
@@ -103,7 +112,7 @@ jobs:
         env:
           OPENCODE_API_KEY: ${{ secrets.OPENCODE_API_KEY }}
         with:
-          model: opencode/nemotron-3.5-lightning-free
+          model: opencode/big-pickle
           share: false
           prompt: |
             Сделай ревью этого pull request на русском языке: корректность,
@@ -129,7 +138,12 @@ jobs:
 6. **`types: [opened, ready_for_review]` без `synchronize`** — переревью на каждый push
    на длинном PR даёт столбец комментариев агента; повторное ревью после правок запрашивается
    комментарием `/oc`, механизм для этого всё равно есть.
-7. **OIDC в обоих job'ах.** Документация в примере авто-ревью использует `use_github_token: true`
+7. **`github.event.comment.user.type != 'Bot'`** — отсев комментариев ботов, включая собственные.
+   Условие `contains` ищет подстроку, а ответы агента упоминают путь `.github/workflows/opencode.yml`,
+   внутри которого лежит `/opencode`. Без этого фильтра агент перезапускает сам себя: так и
+   произошло на прогоне 33306960256, породившем второй комментарий. Цепочка оборвалась только
+   потому, что в том ответе подстроки уже не оказалось.
+8. **OIDC в обоих job'ах.** Документация в примере авто-ревью использует `use_github_token: true`
    со встроенным `GITHUB_TOKEN`; при установленном App это лишний способ делать то же самое.
    Если обмен OIDC на событии `pull_request` не сработает, откат известен и локален:
    `use_github_token: true` плюс `contents/pull-requests/issues: write` в job'е `review`.
@@ -165,7 +179,7 @@ jobs:
 | P02 | Агент не вызывается из GitHub | `.github/workflows/opencode.yml` по решению выше: job `comment` на `issue_comment` и `pull_request_review_comment`, job `review` на `pull_request` с отсевом draft и форков. `hexlet-check.yml` не затрагивается | завершено |
 | P03 | Дерево репозитория в `docs/architecture.md` не знает про новый workflow | Строка про `opencode.yml` в блоке `.github/workflows/` рядом с `ci.yml` и `release-please.yml` | завершено |
 | P04 | Авто-ревью и обмен OIDC на событии `pull_request` не проверены | PR с P02–P03 открывается не-draft и служит проверкой самому себе: job `review` обязан стартовать на нём. `gh run view` — job зелёный, комментарий агента в PR. При отказе OIDC — откат на `use_github_token: true` в этом job'е, зафиксировать в результате | завершено |
-| P05 | Комментарийный триггер не проверен; до merge он не работает в принципе | После merge PR в `master`: `gh issue create` — публичный тестовый issue с нейтральным текстом про сам эксперимент; `gh issue comment` с `/oc explain this issue`; `gh run list --workflow=opencode.yml` и `gh run view --log`; `gh issue view --comments` — ответ агента от имени App. Это приёмка задания | в плане |
+| P05 | Комментарийный триггер не проверен; до merge он не работает в принципе | После merge PR в `master`: `gh issue create` — публичный тестовый issue с нейтральным текстом про сам эксперимент; `gh issue comment` с `/oc explain this issue`; `gh run list --workflow=opencode.yml` и `gh run view --log`; `gh issue view --comments` — ответ агента от имени App. Это приёмка задания | выполняется |
 | P06 | Гейты | `make -C infra gates` (зона своих проверок не имеет) и полный `make gates` из корня перед `task approve infra/010 result`; из корневого набора новый файл задевает только `lint-docs` | в плане |
 
 ## Результат и проверки
@@ -187,6 +201,31 @@ P06 — финального прогона гейтов. Ниже — пров�
   изменённых файлов, включая замечание про отсутствующий фильтр автора.
 - **Чеки PR**: `review` pass, `comment` skipping, `checks` pass, `compose` pass, `build` pass.
 - **Локально**: `make gates` — exit 0.
+
+### Комментарийный триггер (P05)
+
+Тестовый issue #4, комментарий `/oc explain this issue` — прогон 33306585603 зелёный:
+job `comment` отработал, `review` пропущен, агент опубликовал ответ от имени `opencode-agent`.
+Триггер, обмен OIDC и права App на комментарий в issue подтверждены.
+
+Содержание ответа на `nemotron-3.5-lightning-free` оказалось бессвязным, поэтому модель
+заменена на `opencode/big-pickle`; повторная проверка — после того, как замена окажется
+на дефолтной ветке (`issue_comment` читает workflow только оттуда).
+
+### Самоперезапуск агента — найден и закрыт
+
+Ответ агента сам является событием `issue_comment`. На issue #4 это дало безобидный пустой
+прогон 33306685456: в тексте ответа не было ни `/oc`, ни `/opencode`.
+
+На PR #5 тот же механизм сработал иначе. Ревью агента упоминает путь
+`.github/workflows/opencode.yml`, внутри которого лежит подстрока `/opencode`, а условие
+job'а использует `contains`. Комментарий бота прошёл фильтр и запустил агента заново —
+прогон 33306960256, оборвавшийся сообщением `User opencode-agent[bot] does not have write
+permissions`. Цикла не вышло только потому, что в этом сообщении подстроки уже не было;
+при другой формулировке агент отвечал бы себе бесконечно.
+
+Дефект нашло собственное авто-ревью проекта на PR #5. Закрыт условием
+`github.event.comment.user.type != 'Bot'` в job'е `comment`.
 
 ### Стоимость ошибки с моделью
 
