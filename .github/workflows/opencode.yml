@@ -36,7 +36,10 @@ jobs:
           fetch-depth: 1
           persist-credentials: false
 
-      - uses: anomalyco/opencode/github@latest
+      # Стороннее действие закреплено по commit SHA — коммит тега github-v1.2.25.
+      # Плавающий @latest не следит за выпусками и устаревает (anomalyco/opencode#19865).
+      # Обновление — осознанная правка SHA под новый тег.
+      - uses: anomalyco/opencode/github@a3b97d9090ccf4aa9ac32268486283e3131e36b4
         env:
           OPENCODE_API_KEY: ${{ secrets.OPENCODE_API_KEY }}
         with:
@@ -63,7 +66,7 @@ jobs:
         with:
           persist-credentials: false
 
-      - uses: anomalyco/opencode/github@latest
+      - uses: anomalyco/opencode/github@a3b97d9090ccf4aa9ac32268486283e3131e36b4
         env:
           OPENCODE_API_KEY: ${{ secrets.OPENCODE_API_KEY }}
         with:
