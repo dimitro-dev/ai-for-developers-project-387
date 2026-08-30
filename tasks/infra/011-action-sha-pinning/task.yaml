@@ -1,0 +1,14 @@
+id: infra/011
+slug: action-sha-pinning
+title: "Крепление стороннего action по SHA: воспроизводимая версия агента в CI"
+track: lite
+queue:
+  rationale: "Issue #9. В opencode.yml оба job'а используют anomalyco/opencode/github@latest — подвижный тег рядом с секретом OPENCODE_API_KEY и правом id-token: write. Проверено 2026-08-30: latest указывает на github-v1.2.19, актуален github-v1.2.25 (SHA a3b97d9090ccf4aa9ac32268486283e3131e36b4), тег отстаёт хронически (anomalyco/opencode#19865). Важная оговорка: action — composite и сам ставит бинарь CLI через curl opencode.ai/install | bash последнего релиза, входа version в action.yml нет, поэтому SHA закрепляет только обвязку. Решать: пин + Dependabot, и что делать с незакреплённым бинарём"
+gates:
+  setup:
+    status: черновик
+  result:
+    status: черновик
+meta:
+  rev: 3
+  selfHash: fa3018ec81c2ec886f3e30ac626796e9fd882599503e9ed99dda5830c8dffe47

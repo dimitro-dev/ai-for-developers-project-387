@@ -24,6 +24,8 @@
 | [infra/008](infra/008-e2e-web-playwright/) | Web e2e на Playwright: сквозной прогон гостевого сценария | [front/guest/002](front/guest/002-guest-screens/), [back/001](back/001-api-skeleton/), [infra/006](infra/006-ci-release-please/) | заявлена |
 | [infra/009](infra/009-docker-deploy/) | Публикация приложения: Docker-образ и деплой | — | завершена (10/10) |
 | [infra/010](infra/010-opencode-github/) | OpenCode GitHub App: вызов агента из комментария и авто-ревью PR | — | завершена (6/6) |
+| [infra/011](infra/011-action-sha-pinning/) | Крепление стороннего action по SHA: воспроизводимая версия агента в CI | — | заявлена |
+| [infra/012](infra/012-command-trigger-precision/) | Точность триггера агента: команда только с начала строки | — | заявлена |
 
 ### back
 
@@ -73,6 +75,8 @@
 | [back/003](back/003-slot-engine-package/) | заявлена | Вынесение Slot Engine в packages/slot-engine с полным набором доменных тестов | — |
 | [infra/008](infra/008-e2e-web-playwright/) | заявлена | Web e2e дешевле native: testID уже проставлены, react-native-web мапит их в data-testid; эмулятор и APK не нужны. Защищает гостевой сценарий от регрессий во время работы над owner-flow и снимает часть объёма с infra/007 | — |
 | [infra/007](infra/007-e2e-native-framework/) | заявлена | Выбор native e2e-инструмента (Detox / Maestro / Appium) и способа его запуска; нужен работающий APK-контур из infra/002 и эмулятор с аппаратной виртуализацией — на macOS-хосте только вне Docker | — |
+| [infra/011](infra/011-action-sha-pinning/) | заявлена | Issue #9. В opencode.yml оба job'а используют anomalyco/opencode/github@latest — подвижный тег рядом с секретом OPENCODE_API_KEY и правом id-token: write. Проверено 2026-08-30: latest указывает на github-v1.2.19, актуален github-v1.2.25 (SHA a3b97d9090ccf4aa9ac32268486283e3131e36b4), тег отстаёт хронически (anomalyco/opencode#19865). Важная оговорка: action — composite и сам ставит бинарь CLI через curl opencode.ai/install \| bash последнего релиза, входа version в action.yml нет, поэтому SHA закрепляет только обвязку. Решать: пин + Dependabot, и что делать с незакреплённым бинарём | — |
+| [infra/012](infra/012-command-trigger-precision/) | заявлена | Issue #10. Условие job'а comment использует contains, то есть подстроку: агента запускает любое упоминание команды в тексте — цитата, обсуждение, путь .github/workflows/opencode.yml внутри которого есть /opencode. За 2026-08-30 сработало дважды: агент ответил сам себе и завёл лишний PR. Фильтр user.type != 'Bot' закрыл только ботов. Регулярок в выражениях Actions нет, поэтому проверка начала строки делается отдельным job'ом detect с grep -qE по телу через env и блоком outputs: для передачи в needs. Это патч точности, а не безопасности: намеренная команда в начале строки всё равно даёт промпт-инъекцию, настоящее закрытие — фильтр по author_association | — |
 
 ### История выполнения
 
