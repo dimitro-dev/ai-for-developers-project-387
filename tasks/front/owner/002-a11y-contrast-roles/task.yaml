@@ -1,0 +1,14 @@
+id: front/owner/002
+slug: a11y-contrast-roles
+title: "Accessibility владельческой половины: контраст и aria-required-parent"
+track: lite
+queue:
+  rationale: "Найдено первым аудитом Lighthouse 2026-08-31 (прогон 33350955149): у /admin/ accessibility 88 против 100 у гостя. Два проваленных правила: color-contrast — недостаточный контраст текста к фону, и aria-required-parent — элементы с role вне обязательного родителя. Оба детерминированы, axe-core их не выдумывает и они не шумят от прогона к прогону. Решать: контраст почти наверняка упирается в токены UISpec, то есть правка не точечная в экране, а в палитре — проверить по docs/ui-spec-kit; aria-required-parent требует найти конкретный компонент, HTML-отчёт в артефакте прогона называет узлы. Проверять правку тем же make lighthouse по локальному контуру"
+gates:
+  setup:
+    status: черновик
+  result:
+    status: черновик
+meta:
+  rev: 2
+  selfHash: 2ef660aae0995223f02e99ad7656a250e860582f1fe02486575e7b45e9a3beb6

@@ -1,0 +1,14 @@
+id: front/ui/004
+slug: document-metadata
+title: "Метаданные web-документа: meta-description и lang для обоих бандлов"
+track: lite
+queue:
+  rationale: "Найдено первым аудитом Lighthouse 2026-08-31 (прогон 33350955149): SEO 90 у обеих точек входа, замечание meta-description — Document does not have a meta description. Настройка общая для гостевого и владельческого бандлов: секция web в apps/client/app.json содержит только favicon, атрибут lang у документа не задан нигде, app.config.ts добавляет лишь experiments.baseUrl. Решать: где именно Expo позволяет задать description и lang при expo export --platform web, и не разъедется ли это с двумя режимами сборки (EXPO_PUBLIC_APP_MODE guest/owner) — тексты у половин разные. Оговорка: сам аудит показал accessibility 100 у гостя, то есть lang на оценку сейчас не влияет, это задел на корректность документа"
+gates:
+  setup:
+    status: черновик
+  result:
+    status: черновик
+meta:
+  rev: 2
+  selfHash: 996aa97d9f899746cb550aa184978933e88d1512a37efcf5dcf15ee812c1a555

@@ -1,0 +1,14 @@
+id: infra/015
+slug: release-please-permissions
+title: "Подрезание прав release-please: issues:write не нужен"
+track: lite
+queue:
+  rationale: "Найдено самопроверкой 2026-08-31 при аудите permissions. release-please.yml объявляет contents:write, pull-requests:write и issues:write на уровне workflow. Для release-PR и тегов нужны первые два; issues:write action не использует. Дефолт репозитория при этом read (default_workflow_permissions=read, can_approve_pull_request_reviews=false), то есть лишнее право выдано явно, а не досталось по умолчанию. Проверить по документации release-please-action, что issues:write не требуется для labels, и снять. Смежное: workflow с 23.08 красный по причине настройки репозитория, а не кода — не перепутать одно с другим при проверке"
+gates:
+  setup:
+    status: черновик
+  result:
+    status: черновик
+meta:
+  rev: 2
+  selfHash: 70148c1cd78c88825e20d89614e1afe86dd528ccdab0aa7978c19759dc25e9d2

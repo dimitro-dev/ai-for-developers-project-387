@@ -27,6 +27,8 @@
 | [infra/011](infra/011-action-sha-pinning/) | Крепление стороннего action по SHA: воспроизводимая версия агента в CI | — | заявлена |
 | [infra/012](infra/012-command-trigger-precision/) | Точность триггера агента: команда только с начала строки | — | завершена (4/4) |
 | [infra/013](infra/013-lighthouse-nightly/) | Ночной аудит Lighthouse: запуск по расписанию и вручную, отчёт в прогоне | — | завершена (7/7) |
+| [infra/014](infra/014-opencode-concurrency/) | Ограничение параллельности агента: concurrency для opencode.yml | — | заявлена |
+| [infra/015](infra/015-release-please-permissions/) | Подрезание прав release-please: issues:write не нужен | — | заявлена |
 
 ### back
 
@@ -43,6 +45,7 @@
 | [front/ui/001](front/ui/001-guest-uispec/) | Гостевой UISpec: экраны публичного сценария гостя | — | завершена (7/7) |
 | [front/ui/002](front/ui/002-guest-uispec-rebuild/) | Гостевой UISpec по макету дизайн-отдела | [front/ui/001](front/ui/001-guest-uispec/), [contract/001](contract/001-guest-flow-extensions/) | завершена (18/18) |
 | [front/ui/003](front/ui/003-owner-uispec-sync/) | Синхронизация owner-спек с контрактом 0.2.0 и новыми макетами | — | завершена (7/7) |
+| [front/ui/004](front/ui/004-document-metadata/) | Метаданные web-документа: meta-description и lang для обоих бандлов | — | заявлена |
 
 ### front/guest
 
@@ -51,12 +54,14 @@
 | [front/guest/001](front/guest/001-client-foundation/) | Клиентский фундамент гостевой ветки | [front/ui/002](front/ui/002-guest-uispec-rebuild/), [infra/004](infra/004-contract-mock-prism/), [infra/005](infra/005-generated-entrypoints/) | завершена (11/11) |
 | [front/guest/002](front/guest/002-guest-screens/) | Гостевой сценарий: четыре экрана и сквозная проверка | [front/ui/002](front/ui/002-guest-uispec-rebuild/), [front/guest/001](front/guest/001-client-foundation/), [infra/004](infra/004-contract-mock-prism/), [back/001](back/001-api-skeleton/), [infra/003](infra/003-http-security/) | завершена (15/15) |
 | [front/guest/003](front/guest/003-adaptive-slots-column/) | Адаптивная ширина контента гостевых экранов каталога и слотов | — | завершена (4/4) |
+| [front/guest/004](front/guest/004-a11y-label-mismatch/) | Accessibility гостевой половины: label-content-name-mismatch | — | заявлена |
 
 ### front/owner
 
 | id | Задача | Зависимости | Стадия |
 |---|---|---|---|
 | [front/owner/001](front/owner/001-owner-screens/) | Экраны владельца | [back/001](back/001-api-skeleton/), [front/guest/001](front/guest/001-client-foundation/), [front/ui/003](front/ui/003-owner-uispec-sync/) | завершена (22/22) |
+| [front/owner/002](front/owner/002-a11y-contrast-roles/) | Accessibility владельческой половины: контраст и aria-required-parent | — | заявлена |
 
 ### process
 
@@ -72,11 +77,16 @@
 
 | id | Стадия | Обоснование | Параллельно с |
 |---|---|---|---|
+| [front/guest/004](front/guest/004-a11y-label-mismatch/) | заявлена | Найдено первым аудитом Lighthouse 2026-08-31 (прогон 33350955149): у гостевой половины accessibility 100, но правило label-content-name-mismatch провалено — видимый текст элемента не совпадает с его доступным именем. Для пользователя голосового управления это значит, что он произносит то, что видит, а элемент не откликается. Решать: найти узлы по HTML-отчёту из артефакта прогона, сверить видимый текст с accessibilityLabel в React Native — типовая причина в том, что лейбл написан для скринридера подробнее видимой надписи и не содержит её как подстроку. Проверять правку тем же make lighthouse по локальному контуру | — |
+| [front/owner/002](front/owner/002-a11y-contrast-roles/) | заявлена | Найдено первым аудитом Lighthouse 2026-08-31 (прогон 33350955149): у /admin/ accessibility 88 против 100 у гостя. Два проваленных правила: color-contrast — недостаточный контраст текста к фону, и aria-required-parent — элементы с role вне обязательного родителя. Оба детерминированы, axe-core их не выдумывает и они не шумят от прогона к прогону. Решать: контраст почти наверняка упирается в токены UISpec, то есть правка не точечная в экране, а в палитре — проверить по docs/ui-spec-kit; aria-required-parent требует найти конкретный компонент, HTML-отчёт в артефакте прогона называет узлы. Проверять правку тем же make lighthouse по локальному контуру | — |
+| [front/ui/004](front/ui/004-document-metadata/) | заявлена | Найдено первым аудитом Lighthouse 2026-08-31 (прогон 33350955149): SEO 90 у обеих точек входа, замечание meta-description — Document does not have a meta description. Настройка общая для гостевого и владельческого бандлов: секция web в apps/client/app.json содержит только favicon, атрибут lang у документа не задан нигде, app.config.ts добавляет лишь experiments.baseUrl. Решать: где именно Expo позволяет задать description и lang при expo export --platform web, и не разъедется ли это с двумя режимами сборки (EXPO_PUBLIC_APP_MODE guest/owner) — тексты у половин разные. Оговорка: сам аудит показал accessibility 100 у гостя, то есть lang на оценку сейчас не влияет, это задел на корректность документа | — |
 | [infra/002](infra/002-android-builder/) | постановка | Сборка APK в Docker; приоритет низкий — Android проверяется expo run:android на хосте; начинать со спайка QEMU | — |
 | [back/003](back/003-slot-engine-package/) | заявлена | Вынесение Slot Engine в packages/slot-engine с полным набором доменных тестов | — |
 | [infra/008](infra/008-e2e-web-playwright/) | заявлена | Web e2e дешевле native: testID уже проставлены, react-native-web мапит их в data-testid; эмулятор и APK не нужны. Защищает гостевой сценарий от регрессий во время работы над owner-flow и снимает часть объёма с infra/007 | — |
 | [infra/007](infra/007-e2e-native-framework/) | заявлена | Выбор native e2e-инструмента (Detox / Maestro / Appium) и способа его запуска; нужен работающий APK-контур из infra/002 и эмулятор с аппаратной виртуализацией — на macOS-хосте только вне Docker | — |
 | [infra/011](infra/011-action-sha-pinning/) | заявлена | Issue #9. В opencode.yml оба job'а используют anomalyco/opencode/github@latest — подвижный тег рядом с секретом OPENCODE_API_KEY и правом id-token: write. Проверено 2026-08-30: latest указывает на github-v1.2.19, актуален github-v1.2.25 (SHA a3b97d9090ccf4aa9ac32268486283e3131e36b4), тег отстаёт хронически (anomalyco/opencode#19865). Важная оговорка: action — composite и сам ставит бинарь CLI через curl opencode.ai/install \| bash последнего релиза, входа version в action.yml нет, поэтому SHA закрепляет только обвязку. Решать: пин + Dependabot, и что делать с незакреплённым бинарём | — |
+| [infra/014](infra/014-opencode-concurrency/) | заявлена | Найдено самопроверкой 2026-08-31. У opencode.yml нет блока concurrency: очередь комментариев с командой поднимает несколько агентов параллельно, каждый со своим OIDC-обменом и своей сессией провайдера. На бесплатной модели цена — минуты Actions, но при переходе на платную это множитель расходов. Решать: группа по номеру issue или PR (github.event.issue.number), cancel-in-progress скорее false — обрывать начатый ответ агента хуже, чем дать ему договорить. Проверить заодно, не мешает ли группировка авто-ревью и комментарийному вызову идти одновременно на одном PR | — |
+| [infra/015](infra/015-release-please-permissions/) | заявлена | Найдено самопроверкой 2026-08-31 при аудите permissions. release-please.yml объявляет contents:write, pull-requests:write и issues:write на уровне workflow. Для release-PR и тегов нужны первые два; issues:write action не использует. Дефолт репозитория при этом read (default_workflow_permissions=read, can_approve_pull_request_reviews=false), то есть лишнее право выдано явно, а не досталось по умолчанию. Проверить по документации release-please-action, что issues:write не требуется для labels, и снять. Смежное: workflow с 23.08 красный по причине настройки репозитория, а не кода — не перепутать одно с другим при проверке | — |
 
 ### История выполнения
 

@@ -1,0 +1,14 @@
+id: front/guest/004
+slug: a11y-label-mismatch
+title: "Accessibility гостевой половины: label-content-name-mismatch"
+track: lite
+queue:
+  rationale: "Найдено первым аудитом Lighthouse 2026-08-31 (прогон 33350955149): у гостевой половины accessibility 100, но правило label-content-name-mismatch провалено — видимый текст элемента не совпадает с его доступным именем. Для пользователя голосового управления это значит, что он произносит то, что видит, а элемент не откликается. Решать: найти узлы по HTML-отчёту из артефакта прогона, сверить видимый текст с accessibilityLabel в React Native — типовая причина в том, что лейбл написан для скринридера подробнее видимой надписи и не содержит её как подстроку. Проверять правку тем же make lighthouse по локальному контуру"
+gates:
+  setup:
+    status: черновик
+  result:
+    status: черновик
+meta:
+  rev: 2
+  selfHash: 36dada9fb332dd3371c77072414cc671143d0495de5c8c860ab262fd8a65aaf4
