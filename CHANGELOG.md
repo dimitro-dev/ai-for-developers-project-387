@@ -1,5 +1,30 @@
 # Changelog
 
+## 1.0.0 (2026-08-31)
+
+
+### Features
+
+* front/guest/003 P01 — процентная ширина в BoxProps и unit-тесты boxStyle ([7cc4a0b](https://github.com/dimitro-dev/ai-for-developers-project-387/commit/7cc4a0b724535dfd8a8040cf8d697a6fae3e9e0f))
+
+
+### Bug Fixes
+
+* front/guest/003 — адаптивная ширина контента гостевых экранов ([6bf84e6](https://github.com/dimitro-dev/ai-for-developers-project-387/commit/6bf84e6d608a112e6ea9af9dcf2ead8665c6cec7))
+* front/guest/003 P02 — колонка слотов width 100% вместо fill ([5cbc43d](https://github.com/dimitro-dev/ai-for-developers-project-387/commit/5cbc43d20819e62b38c883e356bf169607a9a933))
+* front/guest/003 P03 — превентивный фикс колонки каталога ([73f5583](https://github.com/dimitro-dev/ai-for-developers-project-387/commit/73f5583ba3d45a0c57247c5a36ac657d391af97a))
+* infra/010 — модель big-pickle вместо нестабильной nemotron ([1a63f96](https://github.com/dimitro-dev/ai-for-developers-project-387/commit/1a63f96b4644c5a4d86042932897b156f03552ec))
+* infra/010 — модель big-pickle и фиксация проверок P05 ([20599da](https://github.com/dimitro-dev/ai-for-developers-project-387/commit/20599dad55b1f83ecbe144692186efa81b97f1bf))
+* infra/010 — модель Zen по живому каталогу вместо агрегатора ([2a117fa](https://github.com/dimitro-dev/ai-for-developers-project-387/commit/2a117fa6c25dfc166719cbbb06b9e9caf879cf20))
+* infra/010 — модель по пересечению каталогов opencode и Zen ([649a03f](https://github.com/dimitro-dev/ai-for-developers-project-387/commit/649a03ffefad0a9870a0eb04ee7e558d4ef4a8db))
+* infra/010 — отсев комментариев ботов, агент перезапускал сам себя ([0163853](https://github.com/dimitro-dev/ai-for-developers-project-387/commit/016385393aefd592b631cdf03b18621ac6c4dfca))
+* infra/012 — агент запускается только на команду с начала строки ([38bece3](https://github.com/dimitro-dev/ai-for-developers-project-387/commit/38bece325b0d084bf2ec4e8d3ec9dc9463d7d0f3))
+* infra/012 — агент запускается только на команду с начала строки ([252bd05](https://github.com/dimitro-dev/ai-for-developers-project-387/commit/252bd0548bca80135dfe4777ce1391a4e41b6a54))
+* infra/013 — артефакт аудита не выгружался (скрытый каталог) ([20b9681](https://github.com/dimitro-dev/ai-for-developers-project-387/commit/20b96816ace714e2e3dc2dd11d9fe6a1782f9e5d))
+* infra/013 — артефакт аудита не выгружался: скрытый каталог ([746c254](https://github.com/dimitro-dev/ai-for-developers-project-387/commit/746c254cd979a7baab943fab7e9309bd7c00639e))
+* infra/013 — правки по авто-ревью и согласование setup ([98a5732](https://github.com/dimitro-dev/ai-for-developers-project-387/commit/98a5732490364c8b36a464135d5d57ea10e39ef5))
+* infra/013 — пустой артефакт аудита делается отказом ([377c74b](https://github.com/dimitro-dev/ai-for-developers-project-387/commit/377c74b95519ea18b12d1eb75cea29c4121827f6))
+
 ## [0.3.0](https://github.com/dimitro-dev/ai-for-developers-project-386/compare/v0.2.0...v0.3.0) (2026-08-15)
 
 
