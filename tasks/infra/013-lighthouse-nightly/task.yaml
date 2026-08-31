@@ -8,9 +8,9 @@ gates:
   setup:
     status: согласовано
     approvedAt: 2026-08-31
-    sha256: d424efc06f592f5c16fd3388aff531e36d0403fa7f39c8182405c5914a222c7b
+    sha256: d71f3dbc2c195200d11e578643f4ee4049f7e8c4a393e0e9a60aab4f87bbdcc9
   result:
     status: черновик
 meta:
-  rev: 7
-  selfHash: 25fa897bc405ea13f7167d8eadd8f52d8121ae620ee9757be73b1dcb56cec659
+  rev: 9
+  selfHash: c48517df96bb9bd69d0ea0e58704bffd7b2b8e7a33bd98fa1d18714eed0b9a56
