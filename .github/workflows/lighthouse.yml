@@ -60,5 +60,8 @@ jobs:
           name: lighthouse-${{ github.run_id }}
           path: .lighthouseci/
           retention-days: 30
+          # .lighthouseci — скрытый каталог, а upload-artifact такие по умолчанию пропускает:
+          # без этого шаг зеленеет с предупреждением, а артефакт не создаётся вовсе.
+          include-hidden-files: true
       - if: always() && env.LOCAL_TARGET == 'true'
         run: make -C infra reset
