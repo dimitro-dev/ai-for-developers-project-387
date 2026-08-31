@@ -10,7 +10,9 @@ gates:
     approvedAt: 2026-08-31
     sha256: 5f8806c52fcf7592184698e778f3e8333c851fd0542d5f57b4e50ab28cf7c26f
   result:
-    status: черновик
+    status: согласовано
+    approvedAt: 2026-08-31
+    sha256: e3181c8739d1c3cbce40cf33200aaf5ac28335845cde4427cfc036ac2e92ec4a
 meta:
-  rev: 4
-  selfHash: 498f56abfcf73c97553f60933624d2dafa99a42d5fe94bea122a083984ac0af7
+  rev: 5
+  selfHash: 1c756a0b7a13aee9050137743ea6aa128f3adf5b37b60a05a4298afc76fabd12
