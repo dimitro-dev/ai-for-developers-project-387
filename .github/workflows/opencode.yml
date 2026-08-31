@@ -13,19 +13,53 @@ on:
     types: [opened, ready_for_review]
 
 jobs:
-  # Ручной вызов: `/oc` или `/opencode` в комментарии к issue или к строке кода в PR.
-  # Комментарии ботов отсеиваются: `contains` ищет подстроку, а ответ агента упоминает путь
-  # `.github/workflows/opencode.yml`, внутри которого есть `/opencode`, — без фильтра агент
-  # перезапускает сам себя (наблюдалось на прогоне 33306960256).
+  # Ручной вызов: `/oc` или `/opencode` в начале строки комментария к issue или к строке
+  # кода в PR. Выражения Actions регулярных выражений не поддерживают, поэтому команду
+  # распознаёт отдельный job, а `comment` читает его выход. `contains` здесь только
+  # предфильтр: он решает не «звать ли агента», а «стоит ли ради разбора поднимать раннер»,
+  # иначе `detect` вставал бы на каждый комментарий в репозитории.
+  # Комментарии ботов отсеиваются: ответ агента упоминает путь
+  # `.github/workflows/opencode.yml`, который проходит предфильтр, и на одной подстроке
+  # агент перезапускал сам себя (наблюдалось на прогоне 33306960256).
   # Фильтра по автору нет намеренно (решение владельца, infra/010): цена чужого запуска
   # ограничена бесплатной моделью. Переход на платную модель обязан вернуть условие
   # `github.event.comment.author_association == 'OWNER'`.
-  comment:
+  detect:
     if: |
       github.event_name != 'pull_request' &&
       github.event.comment.user.type != 'Bot' &&
       (contains(github.event.comment.body, '/oc') ||
        contains(github.event.comment.body, '/opencode'))
+    runs-on: ubuntu-latest
+    # Один grep без checkout — работа на секунды, лимит короче, чем у job'ов с агентом.
+    timeout-minutes: 5
+    # Ни checkout, ни обмена OIDC, ни обращений к API: job'у не нужно вообще ничего.
+    permissions: {}
+    outputs:
+      command: ${{ steps.check.outputs.command }}
+    steps:
+      - id: check
+        # Тело комментария приходит переменной окружения, а не подстановкой `${{ }}`
+        # в скрипт: иначе текст любого пользователя GitHub попал бы в исполняемый скрипт
+        # буквально, и закрывающая кавычка выполнила бы на раннере произвольную команду.
+        # Через `env` тело остаётся данными: значение переменной, а не часть команды.
+        env:
+          BODY: ${{ github.event.comment.body }}
+        # `grep` разбирает построчно, поэтому команда засчитывается и во второй строке —
+        # так её и пишут, после пояснения. `^` без ведущих пробелов отсекает отступ
+        # markdown-блока, то есть цитирование, хвостовое `([[:space:]]|$)` — путь
+        # `/opencode.yml`. `[[:space:]]` покрывает и `\r`, если тело придёт с CRLF.
+        run: |
+          if printf '%s' "$BODY" | grep -qE '^/(oc|opencode)([[:space:]]|$)'; then
+            echo 'command=true' >> "$GITHUB_OUTPUT"
+          else
+            echo 'command=false' >> "$GITHUB_OUTPUT"
+          fi
+
+  comment:
+    needs: detect
+    # Выходы job'ов в Actions — всегда строки, поэтому сравнение только со строкой.
+    if: needs.detect.outputs.command == 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 15
     permissions:
