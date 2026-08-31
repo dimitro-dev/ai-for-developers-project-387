@@ -46,7 +46,7 @@ configuration принадлежит ей), новой зависимости в
 
 ```js
 // lighthouserc.js
-const base = process.env.LHCI_BASE_URL ?? 'http://localhost:3001';
+const base = (process.env.LHCI_BASE_URL ?? 'http://localhost:3001').replace(/\/+$/, '');
 
 module.exports = {
   ci: {
@@ -133,9 +133,13 @@ lighthouse: ## Прогнать Lighthouse по поднятому контур�
 	cd $(REPO_ROOT) && npx --yes @lhci/cli@$(LHCI_VERSION) autorun
 
 lighthouse-report: ## Markdown-сводка последнего прогона в stdout
-	@echo "| URL | Perf | A11y | BP | SEO |"
-	@echo "|---|---|---|---|---|"
-	@jq -r '.[] | select(.isRepresentativeRun) | "| \(.url) | \(.summary.performance*100|round) | \(.summary.accessibility*100|round) | \(.summary["best-practices"]*100|round) | \(.summary.seo*100|round) |"' $(REPO_ROOT)/.lighthouseci/manifest.json
+	@if [ ! -f $(REPO_ROOT)/.lighthouseci/manifest.json ]; then \
+	  echo "Отчёт не сформирован: прогон не дошёл до записи manifest.json"; \
+	else \
+	  echo "| URL | Perf | A11y | BP | SEO |"; \
+	  echo "|---|---|---|---|---|"; \
+	  jq -r '.[] | select(.isRepresentativeRun) | "| \(.url) | \(.summary.performance*100|round) | \(.summary.accessibility*100|round) | \(.summary["best-practices"]*100|round) | \(.summary.seo*100|round) |"' $(REPO_ROOT)/.lighthouseci/manifest.json; \
+	fi
 ```
 
 Переход в корень обязателен, и это выяснилось на реализации: `make -C infra` уходит в каталог
@@ -195,6 +199,10 @@ jobs:
         env:
           SEED_DEMO: 'true'
 
+      - name: Убедиться, что контур раздаёт web
+        if: env.LOCAL_TARGET == 'true'
+        run: curl -sSf -o /dev/null "$LHCI_BASE_URL"
+
       - name: Разбудить внешний адрес
         if: env.LOCAL_TARGET != 'true'
         run: curl -sSf -o /dev/null --retry 5 --retry-all-errors --retry-delay 10 --max-time 180 "$LHCI_BASE_URL"
@@ -205,7 +213,7 @@ jobs:
           echo "Аудит: $LHCI_BASE_URL" >> "$GITHUB_STEP_SUMMARY"
           make lighthouse-report >> "$GITHUB_STEP_SUMMARY"
       - if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: lighthouse-${{ github.run_id }}
           path: .lighthouseci/
@@ -402,6 +410,35 @@ error`), а порт 3001 занят вручную запущенным `node a
 Отдельно — поправка к собственному прогнозу из постановки. Предполагалось, что первый прогон
 даст заметные замечания по accessibility. На этом бандле категория дала 100, то есть прогноз
 не подтвердился; где приложение реально слабо, покажет прогон в CI по настоящему контуру.
+
+### Замечания авто-ревью на PR #15
+
+Ревью независимо перепрогнало `make gates`, `scripts/task check` и `lint-docs` и подтвердило
+результаты, а также проверило заявление «ассертов нет»: в `autorun` дефолтный пресет
+`lighthouse:recommended` не применяется, когда настроен upload-таргет, а он настроен. Три
+найденных расхождения приняты и закрыты:
+
+1. **Листинг в «Решении» разошёлся с кодом.** Согласуемая часть называла `upload-artifact@v4`,
+   тогда как в файле стоит `@v7`; кроме того, в листинге не хватало шага проверки раздачи web,
+   добавленного по ходу реализации. Оба блока приведены к фактическому коду и сверены построчно —
+   расхождений ноль.
+2. **Сводка падала на отсутствующем манифесте.** Шаг стоит в `always()`, но `jq` на
+   несуществующем файле давал вторую ошибку поверх первой — ровно это наблюдалось при неудачной
+   попытке локального прогона. Цель `lighthouse-report` теперь проверяет наличие
+   `manifest.json` и печатает «Отчёт не сформирован», завершаясь нулём.
+3. **Двойной слэш.** `LHCI_BASE_URL` с завершающим слэшем давал `//admin/`. Базовый адрес
+   в `lighthouserc.js` срезает хвостовые слэши; проверено на четырёх вариантах входа.
+
+Замечание о хрупкости `startsWith('http://localhost')` принято как верное, но без изменений:
+альтернатива с отдельной переменной-признаком громоздче, а цена ошибки — лишний подъём контура.
+
+Риск «LHCI 0.15.1 против Node 26», отмеченный ревью как непроверенный, снят фактом: локальный
+сквозной прогон шёл на Node 26.0.0 — той версии, которую задаёт `.nvmrc` и ставит `setup-node`
+в раннере.
+
+Процессное возражение — нельзя вливать код с гейтом `setup` в черновике — верно и учтено:
+владелец согласовал гейт после закрытия перечисленных расхождений, merge выполнен после
+согласования.
 
 ### Гейты (P07)
 

@@ -6,9 +6,11 @@ queue:
   rationale: "Issue #14. Требование платформы: регулярная задача по расписанию плюс ручной запуск; наполнение — ночной Lighthouse с утренним отчётом. Постановка и решение написаны, ждут согласования гейта setup. Целится в контур, поднятый в самом прогоне (make -C infra up-app + SEED_DEMO=true), а не в DockHost: на счету провайдера кончились средства. Ассерты выключены до накопления базовой линии — Expo Web это SPA, lighthouse:recommended красил бы каждую ночь в красный"
 gates:
   setup:
-    status: черновик
+    status: согласовано
+    approvedAt: 2026-08-31
+    sha256: 5e7291daf1f603ac3dc543d0e01554c3e0f23724df38f5944579e748e71ce165
   result:
     status: черновик
 meta:
-  rev: 4
-  selfHash: 687b237e45f8b2e709b6eff7bd0b97783d9d1e00ee2c4d8ea7761acc3a50c0dd
+  rev: 5
+  selfHash: ad3442af5aed513780a42e52633f7d2465306a8f568151ecd6e129ff0f82d2a9

@@ -103,9 +103,13 @@ lighthouse: ## Прогнать Lighthouse по поднятому контур�
 # Медиана прогона — строка с isRepresentativeRun; остальные запуски того же URL в сводку
 # не попадают.
 lighthouse-report: ## Markdown-сводка последнего прогона в stdout
-	@echo "| URL | Perf | A11y | BP | SEO |"
-	@echo "|---|---|---|---|---|"
-	@jq -r '.[] | select(.isRepresentativeRun) | "| \(.url) | \(.summary.performance*100|round) | \(.summary.accessibility*100|round) | \(.summary["best-practices"]*100|round) | \(.summary.seo*100|round) |"' $(REPO_ROOT)/.lighthouseci/manifest.json
+	@if [ ! -f $(REPO_ROOT)/.lighthouseci/manifest.json ]; then \
+	  echo "Отчёт не сформирован: прогон не дошёл до записи manifest.json"; \
+	else \
+	  echo "| URL | Perf | A11y | BP | SEO |"; \
+	  echo "|---|---|---|---|---|"; \
+	  jq -r '.[] | select(.isRepresentativeRun) | "| \(.url) | \(.summary.performance*100|round) | \(.summary.accessibility*100|round) | \(.summary["best-practices"]*100|round) | \(.summary.seo*100|round) |"' $(REPO_ROOT)/.lighthouseci/manifest.json; \
+	fi
 
 .PHONY: typecheck test gates up up-app down logs reset config db-migrate db-test image-build image-run \
         lighthouse lighthouse-report

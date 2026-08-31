@@ -1,4 +1,4 @@
-const base = process.env.LHCI_BASE_URL ?? 'http://localhost:3001';
+const base = (process.env.LHCI_BASE_URL ?? 'http://localhost:3001').replace(/\/+$/, '');
 
 module.exports = {
   ci: {
