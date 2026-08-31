@@ -73,6 +73,12 @@ image-build: ## Собрать образ приложения (IMAGE=minical)
 image-run: ## Запустить приложение из образа (PORT=3001, PUBLIC_WEB_URL, SEED_DEMO)
 	$(MAKE) -C infra image-run
 
+lighthouse: ## Прогнать Lighthouse по поднятому контуру, отчёт в .lighthouseci/
+	$(MAKE) -C infra lighthouse
+
+lighthouse-report: ## Markdown-сводка последнего прогона Lighthouse в stdout
+	$(MAKE) -C infra lighthouse-report
+
 .PHONY: setup generate generate-check typecheck test contract-test task-check uispec-validate \
         lint-docs gates zones mock db-up db-down db-logs db-reset db-migrate db-test \
-        image-build image-run
+        image-build image-run lighthouse lighthouse-report
